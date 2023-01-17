@@ -14,7 +14,7 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
     const [dateError, setDateError] = useState<string | null>(null);
     const [signatureError, setSignatureError] = useState<string | null>(null);
 
-    const [date, setDate] = useState<string>(props.prevProps?.date ?? "");
+    const [date, setDate] = useState<string>(props.prevProps?.date ?? new Date().toISOString().split("T")[0]);
     // Intentionally not setting it from prevProps because of conflict with signature img.
     const [drawnSignature, setDrawnSignature] = useState<string>("");
     const [signatureImg, setSignatureImg] = useState<string | null>(null);
@@ -41,6 +41,13 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
 
         if (!drawnSignature && !signatureImg) {
             setSignatureError("Musíte fakturu podepsat buď elektronicky, nebo pomocí fotky podpisu.");
+            error = true;
+        } else {
+            setSignatureError(null);
+        }
+
+        if (!date) {
+            setDateError("Musíte zadat datum.");
             error = true;
         } else {
             setSignatureError(null);
