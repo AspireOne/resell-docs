@@ -1,5 +1,5 @@
 import FormNavigationButtons from "../FormButtons";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import SignatureCanvas from "react-signature-canvas";
 import FormElement from "../FormElement";
 import {Close, Refresh} from "react-ionicons";
@@ -15,44 +15,55 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
     const [signatureError, setSignatureError] = useState<string | null>(null);
 
     const [date, setDate] = useState<string>(props.prevProps?.date ?? "");
-    const [signature, setSignature] = useState<string>(props.prevProps?.signature ?? "");
+    // Intentionally not setting it from prevProps because of conflict with signature img.
+    const [drawnSignature, setDrawnSignature] = useState<string>("");
+    const [signatureImg, setSignatureImg] = useState<string | null>(null);
+    let sigPad: SignatureCanvas | null = null;
 
-    const [customSigDataURL, setCustomSigDataURL] = useState<string | null>(null);
-    let sigPadRef: SignatureCanvas | null = null;
+    // When signature image is set or reset, reset drawn signature.
+    useEffect(() => {
+        if (signatureImg) {
+            setSignatureError(null);
+            sigPad?.clear();
+            setDrawnSignature("");
+        }
+    }, [signatureImg]);
+
+    useEffect(() => {
+        if (drawnSignature) setSignatureError(null);
+    }, [drawnSignature]);
 
     const handleSubmit = (forward: boolean) => {
-        const data = {date: date, signature: signature};
+        const data = {date: date, signature: drawnSignature || signatureImg || ""};
         if (!forward) props.handleSubmit(data, forward);
 
         let error = false;
 
-        if (sigPadRef?.isEmpty && !customSigDataURL) {
-            setSignatureError("Musíte podepsat fakturu.");
+        if (!drawnSignature && !signatureImg) {
+            setSignatureError("Musíte fakturu podepsat buď elektronicky, nebo pomocí fotky podpisu.");
             error = true;
         } else {
             setSignatureError(null);
         }
+
         if (!error) {
             props.handleSubmit(data, forward);
         }
     }
 
-    function setCustomSig(dataURL: string | null) {
-        setCustomSigDataURL(dataURL);
-        if (dataURL) {
-            sigPadRef?.clear();
-        }
-    }
-
     const signaturePad =
         <SignatureCanvas
-            ref={(ref) => { sigPadRef = ref }}
-            penColor={customSigDataURL ? "white" : "black"}
+            ref={(ref) => { sigPad = ref }}
+            penColor={signatureImg ? "white" : "black"}
             backgroundColor={"white"}
+            onEnd={e => {
+                if (signatureImg) return;
+                setDrawnSignature(sigPad?.toDataURL() ?? "");
+            }}
             canvasProps={{
-                width: "300px",
+                width: "425px",
                 height: "80px",
-                className: 'border border-gray-300 rounded ' + (customSigDataURL ? '' : 'cursor-crosshair')}}
+                className: `border border-gray-300 rounded ${!signatureImg && "cursor-crosshair"}`}}
         />;
     return (
         <>
@@ -62,18 +73,22 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             <div className={"flex flex-row gap-2 items-end"}>
                 <FormElement name={"signature"} type={"text"} placeholder={""} title={"Podpis"} error={signatureError} customInputElement={signaturePad}/>
                 <Refresh
-                    cssClasses={"cursor-pointer"}
+                    cssClasses={signatureImg ? "" : "cursor-pointer"}
                     width={"2rem"}
                     height={"auto"}
                     color={"#442994"}
                     title={"Smazat podpis"}
-                    onClick={() => sigPadRef?.clear()}
+                    onClick={() => {
+                        if (signatureImg) return;
+                        sigPad?.clear();
+                        setDrawnSignature("");
+                    }}
                 />
             </div>
 
             <div className="flex flex-row gap-2">
                 <div className={"flex flex-row gap-1 justify-center items-center"}>
-                    <label className="px-3 pb-1 underline custom-file-upload rounded border border-black text-md hover:cursor-pointer">
+                    <label className="pr-3 pb-1 underline custom-file-upload rounded  text-md hover:cursor-pointer">
                         <input
                             type={"file"}
                             accept={"image/png, image/jpeg"}
@@ -84,23 +99,32 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                                 const reader = new FileReader();
                                 reader.onload = (e) => {
                                     const dataURL = e.target?.result;
-                                    if (typeof dataURL === "string") setCustomSig(dataURL);
+                                    if (typeof dataURL === "string") setSignatureImg(dataURL);
                                 }
                                 reader.readAsDataURL(file);
                             }}
                             className="text-md hidden"
                         />
-                        {customSigDataURL ? "Změnit nahraný podpis" : "Nebo nahrajte fotku podpisu"}
+                        {signatureImg ? "Změnit nahraný podpis" : "Nebo nahrajte fotku podpisu"}
                     </label>
-                    {customSigDataURL &&
+                    {signatureImg &&
                         <Close
-                            onClick={() => setCustomSig(null)}
+                            onClick={() => setSignatureImg(null)}
                             cssClasses={"cursor-pointer"}
                             title={"Smazat nahraný podpis"}
                         />
                     }
                 </div>
+
             </div>
+
+            {
+                // Show the signature image if it's set.
+                signatureImg &&
+                <div>
+                    <img src={signatureImg} height={""} width={"100%"} alt={"Nahraný podpis"} className={"border border-gray-300 rounded"}/>
+                </div>
+            }
 
             <FormNavigationButtons handleClick={handleSubmit} secondElement={
                 <SubmitButton className={"w-full ml-5"} onClick={handleSubmit}>Uložit a stáhnout PDF</SubmitButton>

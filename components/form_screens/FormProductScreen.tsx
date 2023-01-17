@@ -1,6 +1,8 @@
 import {useState} from "react";
 import FormElement from "../FormElement";
 import FormNavigationButtons from "../FormButtons";
+import {CustomInputFormElement} from "../FormElement";
+import CustomCombobox from "../CustomCombobox";
 
 export interface ProductProps {
     shoeName: string;
@@ -10,6 +12,12 @@ export interface ProductProps {
     cin: string;
     bankAccount: string;
 }
+
+const currencies = [
+    "CZK",
+    "EUR",
+    "USD",
+]
 
 export default function FormProductScreen(props: {prevProps?: ProductProps, cin: boolean, handleSubmit: (props: ProductProps, forward: boolean) => void}) {
     const [shoeNameError, setShoeNameError] = useState<string | null>(null);
@@ -95,9 +103,9 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
                 <FormElement name={"price"} type={"number"} step={500} placeholder={"0"} title={"Cena"}
                              value={price} error={priceError} onValueChanged={(val) => {setPriceError(null); setPrice(val)}}
                 />
-                <FormElement name={"currency"} type={"text"} placeholder={"CZK"} title={"Měna"} maxLength={3}
-                             value={currency} error={currencyError} onValueChanged={(val) => {setCurrencyError(null); setCurrency(val)}}
-                />
+                <CustomInputFormElement name={"currency"} title={"Měna"}>
+                    <CustomCombobox initialValue={currency} items={currencies} onChange={(val) => {setCurrencyError(null); setCurrency(val)}}/>
+                </CustomInputFormElement>
             </div>
 
             {

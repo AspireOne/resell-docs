@@ -1,7 +1,9 @@
-import FormElement from "../FormElement";
+import FormElement, {CustomInputFormElement} from "../FormElement";
 import {useState} from "react";
 import SubmitButton from "../SubmitButton";
 import FormNavigationButtons from "../FormButtons";
+import {Combobox} from "@headlessui/react";
+import CustomCombobox from "../CustomCombobox";
 
 export interface PersonalInfoProps {
     nameOrCompany: string;
@@ -11,6 +13,17 @@ export interface PersonalInfoProps {
     country: string;
     postalCode: string;
 }
+
+const countries = [
+    "Česko",
+    "Polsko",
+    "Francie",
+    "Itálie",
+    "Rakousko",
+    "Německo",
+    "Slovensko",
+    "USA",
+]
 
 export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoProps, handleSubmit: (props: PersonalInfoProps, forward: boolean) => void}) {
     // Errors.
@@ -105,9 +118,11 @@ export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoP
                          value={street} error={streetError} onValueChanged={(val) => {setStreetError(null); setStreet(val)}}
             />
 
-            <FormElement name={"country"} type={"text"} placeholder={"Česká Republika"} title={"Země"}
-                         value={country} error={countryError} onValueChanged={(val) => {setCountryError(null); setCountry(val)}}
-            />
+            <CustomInputFormElement name={"country"} title={"Země"} error={countryError}>
+                <CustomCombobox initialValue={country} items={countries} autocomplete={"country_name"} onChange={(val) => {
+                    setCountryError(null); setCountry(val)}
+                }/>
+            </CustomInputFormElement>
 
             <FormNavigationButtons handleClick={handleSubmit} />
         </>

@@ -4,7 +4,6 @@ import { Inter } from '@next/font/google'
 import {ChangeEvent, PropsWithChildren, ReactNode, useRef, useState} from "react";
 import SignatureCanvas from 'react-signature-canvas';
 import {Checkmark, Close, Refresh, CheckmarkCircle, CheckmarkDone} from 'react-ionicons'
-import a1 from "./../public/a_1.jpg";
 import {twMerge} from "tailwind-merge";
 import StepBar from "../components/StepBar";
 import FormElement from "../components/FormElement";
@@ -25,9 +24,12 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main className={"overflow-hidden"}>
-                <img src={a1.src} className={"absolute z-[-100]"}/>
-                <h1 className={"text-black text-3xl font-bold text-center m-8"}>Výkup <span className={""}>Resell</span>.<span className={""}>cz</span></h1>
+            <main className={"overflow-hidden bg-hero pb-10"}>
+                {/*<img src={a1.src} className={"absolute z-[-100]"}/>*/}
+                <div className={"text-black text-center m-8"}>
+                    <h1 className={"text-3xl font-bold m-1"}>Výkup <span className={""}>Resell</span>.<span className={""}>cz</span></h1>
+                    <p className={"text-gray-700 text-lg"}>Vytvoření faktury</p>
+                </div>
                 <div className={"relative"}>
                     <Form/>
                 </div>
