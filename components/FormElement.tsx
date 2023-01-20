@@ -1,4 +1,4 @@
-import {ChangeEvent, PropsWithChildren, ReactNode} from "react";
+import {PropsWithChildren, ReactNode} from "react";
 
 export function CustomInputFormElement(props: PropsWithChildren<{
     title?: string,
@@ -27,7 +27,7 @@ export default function FormElement(props: {
     max?: number,
     maxLength?: number,
     min?: number,
-    value?: string,
+    value?: string | null,
     onValueChanged?: (value: string) => void,
     customInputElement?: ReactNode}) {
     return (

@@ -69,11 +69,11 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             }}
             canvasProps={{
                 width: "425px",
-                height: "80px",
+                height: "90px",
                 className: `border border-gray-300 rounded ${!signatureImg && "cursor-crosshair"}`}}
         />;
     return (
-        <>
+        <div className={"flex flex-col gap-3"}>
             <FormElement name={"date"} type={"date"} placeholder={""} title={"Datum"}
                          value={date} error={dateError} onValueChanged={(val) => {setDateError(null); setDate(val)}}/>
 
@@ -93,9 +93,9 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                 />
             </div>
 
-            <div className="flex flex-row gap-2">
-                <div className={"flex flex-row gap-1 justify-center items-center"}>
-                    <label className="pr-3 pb-1 underline custom-file-upload rounded  text-md hover:cursor-pointer">
+            <div className={"flex flex-col gap-3"}>
+                <div className={"flex flex-row gap-1"}>
+                    <label className="pr-3 pb-1 underline custom-file-upload rounded text-md hover:cursor-pointer">
                         <input
                             type={"file"}
                             accept={"image/png, image/jpeg"}
@@ -136,6 +136,6 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             <FormNavigationButtons handleClick={handleSubmit} secondElement={
                 <SubmitButton className={"w-full ml-5"} onClick={handleSubmit}>Uložit a stáhnout PDF</SubmitButton>
             }/>
-        </>
+        </div>
     );
 }

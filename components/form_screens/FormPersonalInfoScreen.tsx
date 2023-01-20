@@ -1,8 +1,6 @@
 import FormElement, {CustomInputFormElement} from "../FormElement";
 import {useState} from "react";
-import SubmitButton from "../SubmitButton";
 import FormNavigationButtons from "../FormButtons";
-import {Combobox} from "@headlessui/react";
 import CustomCombobox from "../CustomCombobox";
 
 export interface PersonalInfoProps {
@@ -10,19 +8,22 @@ export interface PersonalInfoProps {
     email: string;
     street: string;
     city: string;
-    country: string;
+    countryCode: string;
+    countryName: string;
     postalCode: string;
 }
 
 const countries = [
-    "Česko",
-    "Polsko",
-    "Francie",
-    "Itálie",
-    "Rakousko",
-    "Německo",
-    "Slovensko",
-    "USA",
+    ["Česká Republika", "CZ"],
+    ["Polsko", "PL"],
+    ["Francie", "FR"],
+    ["Německo", "DE"],
+    ["USA", "US"],
+    ["Itálie", "IT"],
+    ["Španělsko", "ES"],
+    ["Velká Británie", "GB"],
+    ["Rakousko", "AT"],
+    ["Slovensko", "SK"],
 ]
 
 export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoProps, handleSubmit: (props: PersonalInfoProps, forward: boolean) => void}) {
@@ -39,10 +40,14 @@ export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoP
     const [street, setStreet] = useState<string>(props.prevProps?.street ?? "");
     const [city, setCity] = useState<string>(props.prevProps?.city ?? "");
     const [postalCode, setPostalCode] = useState<string>(props.prevProps?.postalCode ?? "");
-    const [country, setCountry] = useState<string>(props.prevProps?.country ?? "");
+    const [countryName, setCountryName] = useState<string>(props.prevProps?.countryName ?? "");
 
     function handleSubmit(forward: boolean) {
-        const data = { nameOrCompany: name, email: email, street: street, city: city, country: country, postalCode: postalCode };
+        // Get countryCode code from countries array by countryCode name.
+        const countryCode = countries.find((pair) => pair[0] === countryName)?.[1] ?? "";
+
+        const data: PersonalInfoProps = { nameOrCompany: name, email: email, street: street, city: city,
+            countryCode: countryCode, countryName: countryName, postalCode: postalCode };
         if (!forward) props.handleSubmit(data, forward);
 
         let error = false;
@@ -83,7 +88,7 @@ export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoP
             setPostalCodeError(null);
         }
 
-        if (country.length < 3) {
+        if (countryName.length < 3) {
             setCountryError("Země musí mít alespoň 3 znaky.");
             error = true;
         } else {
@@ -96,7 +101,7 @@ export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoP
     }
 
     return (
-        <>
+        <div className={"flex flex-col gap-3"}>
             <FormElement name={"name"} type={"name"} placeholder={"Jan Novák"} title={"Název / Jméno a Příjmení"}
                          value={name} error={nameError} onValueChanged={(val) => {setNameError(null); setName(val)}}
             />
@@ -119,12 +124,12 @@ export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoP
             />
 
             <CustomInputFormElement name={"country"} title={"Země"} error={countryError}>
-                <CustomCombobox initialValue={country} items={countries} autocomplete={"country_name"} onChange={(val) => {
-                    setCountryError(null); setCountry(val)}
+                <CustomCombobox initialValue={countryName} items={countries.map(pair => pair[0])} onChange={(val) => {
+                    setCountryError(null); setCountryName(val)}
                 }/>
             </CustomInputFormElement>
 
             <FormNavigationButtons handleClick={handleSubmit} />
-        </>
+        </div>
     );
 }

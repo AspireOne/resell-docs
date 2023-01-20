@@ -1,18 +1,34 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import {ChangeEvent, PropsWithChildren, ReactNode, useRef, useState} from "react";
-import SignatureCanvas from 'react-signature-canvas';
-import {Checkmark, Close, Refresh, CheckmarkCircle, CheckmarkDone} from 'react-ionicons'
-import {twMerge} from "tailwind-merge";
+import {useState} from "react";
 import StepBar from "../components/StepBar";
-import FormElement from "../components/FormElement";
 import FormProductScreen, {ProductProps} from "../components/form_screens/FormProductScreen";
 import FormFinalScreen, {FinalProps} from "../components/form_screens/FormFinalScreen";
 import FormPersonalInfoScreen, {PersonalInfoProps} from "../components/form_screens/FormPersonalInfoScreen";
 import FormIcoScreen from "../components/form_screens/FormIcoScreen";
 import FormResultScreen from "../components/form_screens/FormResultScreen";
+import DocManipulator from "../backend/DocManipulator";
+import axios from "axios";
+import {stringify} from "querystring";
+import {Data} from "../backend/Data";
 
+const testData: Data = {
+    bankAccount: "",
+    cin:"27604977",
+    city:"Zlín",
+    countryCode:"US",
+    countryName:"USA",
+    currency:"CZK",
+    date:"2023-01-20",
+    email:"matejpesl1@gmail.com",
+    iban:"CZ55 0800 0000 0012 3456 7899",
+    nameOrCompany:"Matěj Pešl",
+    postalCode:"763 63",
+    price:"1999",
+    shoeName:"Teniska X-650",
+    shoeSize:"23",
+    street:"Halenkovice 708",
+    signature: ""
+}
 
 export default function Home() {
     return (
@@ -45,10 +61,11 @@ const Form = () => {
     const [productInfo, setProductInfo] = useState<ProductProps | undefined>(undefined);
     const [finalInfo, setFinalInfo] = useState<FinalProps | undefined>(undefined);
     const [cin, setCin] = useState<boolean>(false);
+    
+    const [resultState, setResultState] = useState<"loading" | "failed" | "success" | "warning">("loading");
+    const [resultMessage, setResultMessage] = useState<string>("");
 
-    const handleScreenSubmit = (forward: boolean) => {
-        setCurrStep(currStep + (forward ? 1 : -1));
-    }
+    const handleScreenSubmit = (forward: boolean) => setCurrStep(currStep + (forward ? 1 : -1));
 
     const screens = [
         {
@@ -74,24 +91,95 @@ const Form = () => {
         },
         {
             title: "Datum a podpis",
-            content: <FormFinalScreen prevProps={finalInfo} handleSubmit={(props, forward) => {
+            content: <FormFinalScreen prevProps={finalInfo} handleSubmit={async (props, forward) => {
+                // Note: THIS DOES NOT UPDATE IMMEDIATELY, THATS WHY WE USE PROPS!
                 setFinalInfo(props);
                 handleScreenSubmit(forward);
+                setResultMessage("Vytváření dokumentu...");
+                const data: Data = {...personalInfo!, ...productInfo!, ...props!};
+                const docManipulator = new DocManipulator(data);
+
+                let pdf;
+                try {
+                    pdf = await docManipulator.createPdf();
+                    await docManipulator.downloadPdf(pdf);
+                } catch (e) {
+                    setResultState("failed");
+                    setResultMessage("Nastala chyba při vytváření PDF. Vyplňte prosím " +
+                        "manuálně tento formulář: " + window.location.host + "/doc.pdf.");
+                    return;
+                }
+
+                setResultMessage("Ukládání na server...");
+
+                let pdfAsBase64: null | string = null;
+                try {
+                    pdfAsBase64 = await pdf.saveAsBase64();
+                } catch (e) {
+                    console.log("Could not convert pdf to base64. " + e);
+                }
+
+                try {
+                    const expense = await createExpense(data, pdfAsBase64 );
+                } catch (e) {
+                    setResultState("warning");
+                    setResultMessage("Nastala chyba při zaznamenávání faktury na serveru, ale PDF bylo " +
+                        "úspěšně staženo. Informujte prosím prodejce.");
+                    return;
+                }
+
+                setResultState("success");
+                setResultMessage("Faktura byla úspěšně vytvořena.");
             }}/>
         },
         {
             title: "Hotovo",
-            content: <FormResultScreen/>
+            content: <FormResultScreen state={resultState} message={resultMessage}/>
         }
     ]
 
     return (
         <>
             <StepBar currStep={currStep} steps={screens.map((screen) => screen.title)}/>
-            <form className={"relative min-h-[600px] pb-28 flex flex-col gap-3 p-6 rounded w-[32rem] shadow-md border border-gray-200  mx-auto backdrop-blur-lg bg-white bg-opacity-70"}>
+            <form className={"z-1 relative min-h-[600px] pb-28 p-6 rounded w-[32rem] shadow-md border border-gray-200  mx-auto backdrop-blur-lg bg-white bg-opacity-70"}>
                 {screens[currStep].content}
             </form>
         </>
     );
 }
 
+async function createExpense(data: Data, pdfAsBase64?: string | null): Promise<{[key: string]: string}> {
+    // create axios request to http://localhost:3000/api/fakturoid?action=createSubject.
+    const subjects: any[] = await axios.get(`http://localhost:3000/api/fakturoid?action=getSubject&email=${data.email}`)
+        .then((res) => {
+            return res.data;
+        }).catch((err) => {
+            console.log(err);
+            return [];
+        });
+
+    let subject: undefined | {[key:string]: string} = subjects[0];
+
+    if (subjects.length === 0) {
+        subject = await axios.post("http://localhost:3000/api/fakturoid?action=createSubject", {
+            data: {data: data}
+        }).then((res) => {
+            return res.data;
+        }).catch((err) => {
+            console.log(err)
+            return undefined;
+        });
+    }
+
+    if (!subject) {
+        throw new Error("Could not get or create subject.");
+    } else {
+        console.log("Got existing subject or created one.");
+    }
+
+    return await axios.post("http://localhost:3000/api/fakturoid?action=createExpense", {
+        data: {data: data, subjectId: subject.id, pdfEncoded: pdfAsBase64}
+    }).then((res) => {
+        return res.data;
+    });
+}

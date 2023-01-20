@@ -11,6 +11,7 @@ export interface ProductProps {
     currency: string;
     cin: string;
     bankAccount: string;
+    iban: string;
 }
 
 const currencies = [
@@ -26,6 +27,7 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
     const [currencyError, setCurrencyError] = useState<string | null>(null);
     const [cinError, setCinError] = useState<string | null>(null);
     const [bankAccountError, setBankAccountError] = useState<string | null>(null);
+    const [ibanError, setIbanError] = useState<string | null>(null);
 
     const [cin, setCin] = useState<string>(props.prevProps?.cin ?? "");
     const [shoeName, setShoeName] = useState<string>(props.prevProps?.shoeName ?? "");
@@ -33,9 +35,10 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
     const [price, setPrice] = useState<string>(props.prevProps?.price ?? "");
     const [currency, setCurrency] = useState<string>(props.prevProps?.currency ?? "");
     const [bankAccount, setBankAccount] = useState<string>(props.prevProps?.bankAccount ?? "");
+    const [iban, setIban] = useState<string>(props.prevProps?.iban ?? "");
 
     function handleSubmit(forward: boolean) {
-        const data = { shoeName: shoeName, shoeSize: shoeSize, price: price, currency: currency, cin: cin, bankAccount: bankAccount };
+        const data = { shoeName: shoeName, shoeSize: shoeSize, price: price, currency: currency, cin: cin, bankAccount: bankAccount, iban: iban};
         if (!forward) props.handleSubmit(data, forward);
 
         let error: boolean | null = null;
@@ -69,18 +72,27 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
         }
 
         if (currency.length < 3) {
-            setCurrencyError("Měna musí mít 3 znaky (ISO 4217).");
+            setCurrencyError("Musíte vyplnit měnu.");
             error = true;
         } else {
             setCurrencyError(null);
         }
 
-        if (bankAccount.length < 2) {
-            setBankAccountError("Bankovní účet musí mít alespoň 2 znaky.");
-        } else if (bankAccount.length > 32) {
-            setBankAccountError("Bankovní číslo je moc dlouhé.");
+        if (iban !== "" && iban.length < 8) {
+            setIbanError("Zkontrolujte IBAN.");
+            error = true;
+        }
+
+        if (bankAccount !== "" && bankAccount.length < 5) {
+            setBankAccountError("Zkontrolujte číslo bankovního účtu.");
         } else {
             setBankAccountError(null);
+        }
+
+        if (iban === "" && bankAccount === "") {
+            setBankAccountError("Musíte vyplnit buď IBAN, nebo číslo bankovního účtu.");
+            setIbanError("Musíte vyplnit buď IBAN, nebo číslo bankovního účtu.");
+            error = true;
         }
 
         if (!error) {
@@ -89,7 +101,7 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
     }
 
     return (
-        <>
+        <div className={"flex flex-col gap-3"}>
             <div className="flex flex-row gap-2 justify-center">
                 <FormElement name={"shoe-name"} type={"text"} placeholder={"ADIDAS I-5923"} title={"Název bot"}
                              value={shoeName} error={shoeNameError} onValueChanged={(val) => {setShoeNameError(null); setShoeName(val)}}
@@ -103,7 +115,7 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
                 <FormElement name={"price"} type={"number"} step={500} placeholder={"0"} title={"Cena"}
                              value={price} error={priceError} onValueChanged={(val) => {setPriceError(null); setPrice(val)}}
                 />
-                <CustomInputFormElement name={"currency"} title={"Měna"}>
+                <CustomInputFormElement name={"currency"} title={"Měna"} error={currencyError}>
                     <CustomCombobox initialValue={currency} items={currencies} onChange={(val) => {setCurrencyError(null); setCurrency(val)}}/>
                 </CustomInputFormElement>
             </div>
@@ -115,11 +127,31 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
                 />
             }
 
-            <FormElement name={"bank-account"} type={"text"} placeholder={"CZ69 0710 1781 2400 0000 4159"} title={"Číslo účtu nebo IBAN"}
-                         value={bankAccount} error={bankAccountError} onValueChanged={(val) => {setBankAccountError(null); setBankAccount(val)}}
-            />
+            <div>
+                <FormElement name={"bank-account"} type={"text"} placeholder={"2600111111/2010"} title={"Číslo účtu"}
+                             value={bankAccount} error={bankAccountError} onValueChanged={(val) => {
+                                 setIbanError(null);
+                                 setBankAccountError(null);
+                                 setBankAccount(val);
+                                 setIban("");
+                             }
+                }
+                />
+
+                <p className={"mt-3 -mb-5 text-center text-gray-500 font-bold"}>Nebo</p>
+
+                <FormElement name={"iban"} type={"text"} placeholder={"CZ69 0710 1781 2400 0000 4159"} title={"IBAN"}
+                             value={iban} error={ibanError} onValueChanged={(val) => {
+                                 setIbanError(null);
+                                 setBankAccountError(null);
+                                 setIban(val);
+                                 setBankAccount("");
+                             }
+                }
+                />
+            </div>
 
             <FormNavigationButtons handleClick={handleSubmit} />
-        </>
+        </div>
     )
 }

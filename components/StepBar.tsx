@@ -1,6 +1,4 @@
 import {CheckmarkCircle, CloseCircle} from "react-ionicons";
-import {useState} from "react";
-import {twMerge} from "tailwind-merge";
 
 export default function StepBar(props: {steps: string[], currStep: number}) {
     return (
@@ -22,7 +20,7 @@ export default function StepBar(props: {steps: string[], currStep: number}) {
                                 </div>
                                 {
                                     i+1 < props.steps.length &&
-                                    <div className={`flex-1 px-2 mx-2 rounded border-b-8 w-10 transition duration-700 ${finished && "border-green-500"}`}></div>
+                                    <div className={`flex-1 px-2 mx-2 rounded border-b-[7px] w-10 transition duration-700 ${finished && "border-green-500"}`}></div>
                                 }
                             </span>
                         );
