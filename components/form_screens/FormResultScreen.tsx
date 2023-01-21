@@ -23,7 +23,7 @@ export default function FormResultScreen(props: {state: "loading" | "failed" | "
             icon = <AlertCircle key={3} color={"orange"} width={"100%"} height={"100%"} cssClasses={""}/>
             break;
         case "success":
-            icon = <CheckmarkCircle key={4} color={"green"} width={"100%"} height={"100%"} cssClasses={"animate-pulse"}/>
+            icon = <CheckmarkCircle key={4} color={"green"} width={"100%"} height={"100%"} cssClasses={""}/>
             break;
     }
 
