@@ -27,11 +27,6 @@ if (!process.env.FAKTUROID_USERNAME || !process.env.FAKTUROID_API_KEY || !proces
 }
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse) {
-    if (!process.env.FAKTUROID_USERNAME || !process.env.FAKTUROID_API_KEY || !process.env.FAKTUROID_API_BASE) {
-        console.error("SOME OR ALL FAKTUROID ENV SECRETS ARE NOT CONFIGURED!");
-        res.status(500).json({error: "Fakturoid API not configured at the server."});
-        return;
-    }
     const action = req.query.action;
     if (!action || action === "") return res.status(400).json({ error: 'You must specify action.' });
 
