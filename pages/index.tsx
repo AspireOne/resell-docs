@@ -95,6 +95,7 @@ const Form = () => {
                 // Note: THIS DOES NOT UPDATE IMMEDIATELY, THATS WHY WE USE PROPS!
                 setFinalInfo(props);
                 handleScreenSubmit(forward);
+                if (!forward) return;
                 setResultMessage("Vytváření dokumentu...");
                 const data: Data = {...personalInfo!, ...productInfo!, ...props!};
                 const docManipulator = new DocManipulator(data);
@@ -129,7 +130,7 @@ const Form = () => {
                 }
 
                 setResultState("success");
-                setResultMessage("Faktura byla úspěšně vytvořena.");
+                setResultMessage("Faktura byla úspěšně vytvořena a stažena.");
             }}/>
         },
         {
@@ -141,7 +142,7 @@ const Form = () => {
     return (
         <>
             <StepBar currStep={currStep} steps={screens.map((screen) => screen.title)}/>
-            <form className={"z-1 relative min-h-[600px] pb-28 p-6 rounded w-[32rem] shadow-md border border-gray-200  mx-auto backdrop-blur-lg bg-white bg-opacity-70"}>
+            <form className={"z-1 relative min-h-[600px] pb-28 p-6 rounded w-full sm:w-[32rem] shadow-md border border-gray-200  mx-auto backdrop-blur-lg bg-white bg-opacity-70"}>
                 {screens[currStep].content}
             </form>
         </>

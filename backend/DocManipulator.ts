@@ -65,12 +65,9 @@ export default class DocManipulator {
     }
 
     public async downloadPdf(doc: PDFDocument) {
-        const pdfBytes = await doc.save();
-        // Convert the bytes to blob and download it.
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
         const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = 'doc.pdf';
+        link.href = await this.getDownloadLink(doc);
+        link.download = "vykupni_formular_" + new Date().toISOString().split('T')[0] + ".pdf";
         link.click();
     }
 
@@ -78,6 +75,6 @@ export default class DocManipulator {
         const pdfBytes = await doc.save();
         // Convert the bytes to blob and download it.
         const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        return window.URL.createObjectURL(blob);;
+        return window.URL.createObjectURL(blob);
     }
 }

@@ -138,7 +138,7 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
                 }
                 />
 
-                <p className={"mt-3 -mb-5 text-center text-gray-500 font-bold"}>Nebo</p>
+                <p className={"mt-3 -mb-5 text-center text-gray-500 "}>Nebo</p>
 
                 <FormElement name={"iban"} type={"text"} placeholder={"CZ69 0710 1781 2400 0000 4159"} title={"IBAN"}
                              value={iban} error={ibanError} onValueChanged={(val) => {

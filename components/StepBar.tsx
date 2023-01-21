@@ -20,7 +20,7 @@ export default function StepBar(props: {steps: string[], currStep: number}) {
                                 </div>
                                 {
                                     i+1 < props.steps.length &&
-                                    <div className={`flex-1 px-2 mx-2 rounded border-b-[7px] w-10 transition duration-700 ${finished && "border-green-500"}`}></div>
+                                    <div className={`flex-1 px-2 rounded border-b-[5px] w-12 sm:w-14 transition duration-700 ${finished && "border-green-500"}`}></div>
                                 }
                             </span>
                         );
@@ -34,40 +34,26 @@ export default function StepBar(props: {steps: string[], currStep: number}) {
     );
 }
 
-    const Line = (props: {progress: number, totalItems: number}) => {
-        const width = Math.round(66.4 / props.totalItems);
-        console.log(width);
+const StepCircle = (props: {state?: "unfinished" | "finished" | "incorrect", step: number}) => {
+    if (!props.state || props.state === "unfinished") return <StepCircleWithNumber step={props.step}/>;
 
-        return (
-            <div className={`w-[${width}%] px-2 align-center items-center align-middle content-center flex`}>
-                <div className="w-full bg-gray-200 rounded items-center align-middle align-center flex-1">
-                    <div className={`bg-green-500 text-xs leading-none py-1 text-center text-gray-800 rounded transition duration-100 w-[${props.progress}%]`}>
-                    </div>
-                </div>
+    const Icon = props.state === "finished" ? CheckmarkCircle : CloseCircle;
+    return (
+        <div className="flex-1">
+            <div className={"w-10 h-10 -m-4 mx-auto rounded-full text-lg text-white flex items-center animate-[spin_1s_ease-in-out_forwards]"}>
+                <Icon color={"#17a432"} cssClasses={"-ml-1"} height={"120%"} width={"120%"}/>
             </div>
-        )
-    }
+        </div>
+    )
+}
 
-    const StepCircle = (props: {state?: "unfinished" | "finished" | "incorrect", step: number}) => {
-        if (!props.state || props.state === "unfinished") return <StepCircleWithNumber step={props.step}/>;
-
-        const Icon = props.state === "finished" ? CheckmarkCircle : CloseCircle;
-        return (
-            <div className="flex-1">
-                <div className={"w-10 h-10 mx-auto rounded-full text-lg text-white flex items-center animate-[spin_1s_ease-in-out_forwards]"}>
-                    <Icon color={"#17a432"} height={"100%"} width={"100%"}/>
-                </div>
+const StepCircleWithNumber = (props: {step: number}) => {
+    return (
+        <div className="flex-1">
+            <div
+                className="w-10 h-10 bg-white border-2 border-gray-200 mx-auto rounded-full text-lg text-white flex items-center">
+                <span className="text-gray-600 text-center w-full">{props.step}</span>
             </div>
-        )
-    }
-
-    const StepCircleWithNumber = (props: {step: number}) => {
-        return (
-            <div className="flex-1">
-                <div
-                    className="w-10 h-10 bg-white border-2 border-gray-200 mx-auto rounded-full text-lg text-white flex items-center">
-                    <span className="text-gray-600 text-center w-full">{props.step}</span>
-                </div>
-            </div>
-        );
-    }
+        </div>
+    );
+}
