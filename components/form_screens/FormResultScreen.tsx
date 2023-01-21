@@ -14,15 +14,16 @@ export default function FormResultScreen(props: {state: "loading" | "failed" | "
     switch (props.state) {
         case "loading":
             icon = <EllipsisHorizontalCircle key={1} color={"gray"} height="100%" width="100%" cssClasses={"animate-pulse"}/>;
+            animate = false;
             break;
         case "failed":
-            icon = <CloseCircle key={2} color={"red"} width={"100%"} height={"100%"}/>
+            icon = <CloseCircle key={2} color={"red"} width={"100%"} height={"100%"} cssClasses={""}/>
             break;
         case "warning":
-            icon = <AlertCircle key={3} color={"orange"} width={"100%"} height={"100%"}/>
+            icon = <AlertCircle key={3} color={"orange"} width={"100%"} height={"100%"} cssClasses={""}/>
             break;
         case "success":
-            icon = <CheckmarkCircle key={4} color={"green"} width={"100%"} height={"100%"}/>
+            icon = <CheckmarkCircle key={4} color={"green"} width={"100%"} height={"100%"} cssClasses={"animate-pulse"}/>
             break;
     }
 
@@ -38,7 +39,7 @@ export default function FormResultScreen(props: {state: "loading" | "failed" | "
                     </motion.div>
                 )}
             </div>
-            <div className={"text-md text-gray-800"}>{props.message}</div>
+            <div className={"text-md text-gray-800 text-center"}>{props.message}</div>
         </div>
     );
 }
