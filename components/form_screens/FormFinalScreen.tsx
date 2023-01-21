@@ -50,7 +50,7 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             setDateError("Musíte zadat datum.");
             error = true;
         } else {
-            setSignatureError(null);
+            setDateError(null);
         }
 
         if (!error) {

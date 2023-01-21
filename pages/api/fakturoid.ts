@@ -2,27 +2,36 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {Data} from "../../backend/Data";
 import axios from "axios";
 
-const base = "https://app.fakturoid.cz/api/v2/accounts/hynekkrausdev";
+const base = process.env.FAKTUROID_API_BASE;
 const urls = {
-    newSubject: base + "/subjects.json",
     // subjects.json?email={email}
     getSubject: (email: string) => base + "/subjects/search.json?query=" + email,
     createExpense: base + "/expenses.json",
+    newSubject: base + "/subjects.json",
 }
 
 const headers = {
-    "User-Agent": "ResellczVykupniFaktura (matejpesl1@gmail.com)",
+    "User-Agent": `ResellczVykupniFaktura (${process.env.FAKTUROID_USERNAME ?? ""})`,
+    'Authorization':`Bearer ${process.env.FAKTUROID_API_KEY ?? ""}`,
     "Content-Type": "application/json",
     'Acess-Control-Allow-Origin':'*',
-    'Authorization':`Bearer 86fc929be7493e7375a7531d44b4ad94105f813a`,
 }
 
 const auth = {
-    username: "matejpesl1@gmail.com",
-    password: "86fc929be7493e7375a7531d44b4ad94105f813a"
+    username: process.env.FAKTUROID_USERNAME ?? "",
+    password: process.env.FAKTUROID_API_KEY ?? ""
+}
+
+if (!process.env.FAKTUROID_USERNAME || !process.env.FAKTUROID_API_KEY || !process.env.FAKTUROID_API_BASE) {
+    console.error("SOME OR ALL FAKTUROID ENV SECRETS ARE NOT CONFIGURED!");
 }
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse) {
+    if (!process.env.FAKTUROID_USERNAME || !process.env.FAKTUROID_API_KEY || !process.env.FAKTUROID_API_BASE) {
+        console.error("SOME OR ALL FAKTUROID ENV SECRETS ARE NOT CONFIGURED!");
+        res.status(500).json({error: "Fakturoid API not configured at the server."});
+        return;
+    }
     const action = req.query.action;
     if (!action || action === "") return res.status(400).json({ error: 'You must specify action.' });
 
@@ -89,8 +98,6 @@ function createExpense(data: Data, subjectId: string | number, pdfEncoded?: stri
             }
         ]
     }
-
-    console.log(pdfEncoded ? "data:application/pdf;base64," + pdfEncoded : "");
 
     return axios({url: urls.createExpense, method: 'POST', headers: headers, auth: auth, data: body })
         .then(res => res.data);
