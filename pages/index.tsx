@@ -8,9 +8,13 @@ import FormCinScreen from "../components/form_screens/FormCinScreen";
 import FormResultScreen from "../components/form_screens/FormResultScreen";
 import DocManipulator from "../backend/DocManipulator";
 import axios from "axios";
-import {stringify} from "querystring";
-import {Data} from "../backend/Data";
-import {useTranslation} from "react-i18next";
+    import {stringify} from "querystring";
+    import {Data} from "../backend/Data";
+    import {useTranslation} from "react-i18next";
+    import {Menu} from "@headlessui/react";
+    import {Language} from "react-ionicons";
+    import {PL, US, CZ, DE} from "country-flag-icons/react/3x2";
+import LanguageDropdown from "../components/LanguageDropdown";
 
 const testData: Data = {
     bankAccount: "",
@@ -44,11 +48,8 @@ export default function Home() {
             </Head>
 
             <main className={"overflow-hidden bg-hero pb-10"}>
-                {/*TODO: Make this not look like shit.*/}
-                <div className={"absolute "}>
-                    <button className={"bg-gray-200 p-2 rounded"} onClick={() => i18n.changeLanguage("en")}>EN</button>
-                    <button className={"bg-gray-200 p-2 rounded"} onClick={() => i18n.changeLanguage("cs")}>CS</button>
-                </div>
+                <LanguageDropdown/>
+
                 <div className={"text-black text-center m-8"}>
                     <h1 className={"text-3xl font-bold m-1"}>{t("main.title")}</h1>
                     <p className={"text-gray-700 text-lg"}>{t("main.description")}</p>
