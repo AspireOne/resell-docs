@@ -4,12 +4,13 @@ import StepBar from "../components/StepBar";
 import FormProductScreen, {ProductProps} from "../components/form_screens/FormProductScreen";
 import FormFinalScreen, {FinalProps} from "../components/form_screens/FormFinalScreen";
 import FormPersonalInfoScreen, {PersonalInfoProps} from "../components/form_screens/FormPersonalInfoScreen";
-import FormIcoScreen from "../components/form_screens/FormIcoScreen";
+import FormCinScreen from "../components/form_screens/FormCinScreen";
 import FormResultScreen from "../components/form_screens/FormResultScreen";
 import DocManipulator from "../backend/DocManipulator";
 import axios from "axios";
 import {stringify} from "querystring";
 import {Data} from "../backend/Data";
+import {useTranslation} from "react-i18next";
 
 const testData: Data = {
     bankAccount: "",
@@ -31,20 +32,26 @@ const testData: Data = {
 }
 
 export default function Home() {
+    const {t, i18n} = useTranslation();
+
     return (
         <>
             <Head>
-                <title>Resell.cz - výkupní faktura</title>
-                <meta name="description" content="Nástroj pro vytvoření výkupní faktury u resell.cz." />
+                <title>{t("head.title")}</title>
+                <meta name="description" content={t("head.description") ?? ""} />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <main className={"overflow-hidden bg-hero pb-10"}>
-                {/*<img src={a1.src} className={"absolute z-[-100]"}/>*/}
+                {/*TODO: Make this not look like shit.*/}
+                <div className={"absolute "}>
+                    <button className={"bg-gray-200 p-2 rounded"} onClick={() => i18n.changeLanguage("en")}>EN</button>
+                    <button className={"bg-gray-200 p-2 rounded"} onClick={() => i18n.changeLanguage("cs")}>CS</button>
+                </div>
                 <div className={"text-black text-center m-8"}>
-                    <h1 className={"text-3xl font-bold m-1"}>Výkup <span className={""}>Resell</span>.<span className={""}>cz</span></h1>
-                    <p className={"text-gray-700 text-lg"}>Vytvoření faktury</p>
+                    <h1 className={"text-3xl font-bold m-1"}>{t("main.title")}</h1>
+                    <p className={"text-gray-700 text-lg"}>{t("main.description")}</p>
                 </div>
                 <div className={"relative"}>
                     <Form/>
@@ -65,38 +72,40 @@ const Form = () => {
     const [resultState, setResultState] = useState<"loading" | "failed" | "success" | "warning">("loading");
     const [resultMessage, setResultMessage] = useState<string>("");
 
+    const {t, i18n} = useTranslation();
+
     const handleScreenSubmit = (forward: boolean) => setCurrStep(currStep + (forward ? 1 : -1));
 
     const screens = [
         {
-            title: "IČO",
-            content: <FormIcoScreen handleSubmit={(cin) => {
+            title: t("screens.cin.name"),
+            content: <FormCinScreen handleSubmit={(cin) => {
                 setCin(cin);
                 handleScreenSubmit(true);
             }}/>
         },
         {
-            title: "Osobní údaje",
+            title: t("screens.personalInfo.name"),
             content: <FormPersonalInfoScreen prevProps={personalInfo} handleSubmit={(props, forward) => {
                 setPersonalInfo(props);
                 handleScreenSubmit(forward);
             }}/>
         },
         {
-            title: "Produkt",
+            title: t("screens.product.name"),
             content: <FormProductScreen prevProps={productInfo} cin={cin} handleSubmit={(props, forward) => {
                 setProductInfo(props);
                 handleScreenSubmit(forward);
             }}/>
         },
         {
-            title: "Datum a podpis",
+            title: t("screens.final.name"),
             content: <FormFinalScreen prevProps={finalInfo} handleSubmit={async (props, forward) => {
                 // Note: THIS DOES NOT UPDATE IMMEDIATELY, THATS WHY WE USE PROPS!
                 setFinalInfo(props);
                 handleScreenSubmit(forward);
                 if (!forward) return;
-                setResultMessage("Vytváření dokumentu...");
+                setResultMessage(t("screens.result.progressMsg") ?? "");
                 const data: Data = {...personalInfo!, ...productInfo!, ...props!};
                 const docManipulator = new DocManipulator(data);
 
@@ -106,12 +115,11 @@ const Form = () => {
                     await docManipulator.downloadPdf(pdf);
                 } catch (e) {
                     setResultState("failed");
-                    setResultMessage("Nastala chyba při vytváření PDF. Vyplňte prosím " +
-                        "manuálně tento formulář: " + window.location.host + "/doc.pdf.");
+                    setResultMessage(t("screens.result.failedMsg", {url: window.location.host + "/doc.pdf"}) ?? "");
                     return;
                 }
 
-                setResultMessage("Ukládání na server...");
+                setResultMessage(t("screens.result.savingToServerMsg") ?? "");
 
                 let pdfAsBase64: null | string = null;
                 try {
@@ -124,17 +132,16 @@ const Form = () => {
                     const expense = await createExpense(data, pdfAsBase64 );
                 } catch (e) {
                     setResultState("warning");
-                    setResultMessage("Nastala chyba při zaznamenávání faktury na serveru, ale PDF bylo " +
-                        "úspěšně staženo. Informujte prosím prodejce.");
+                    setResultMessage(t("screens.result.warningMsg") ?? "");
                     return;
                 }
 
                 setResultState("success");
-                setResultMessage("Faktura byla úspěšně vytvořena a stažena.");
+                setResultMessage(t("screens.result.successMsg") ?? "");
             }}/>
         },
         {
-            title: "Hotovo",
+            title: t("screens.result.name"),
             content: <FormResultScreen state={resultState} message={resultMessage}/>
         }
     ]

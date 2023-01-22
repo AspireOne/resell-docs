@@ -94,7 +94,7 @@ function createExpense(data: Data, subjectId: string | number, pdfEncoded?: stri
                 'quantity': 1,
                 'unit_name': data.shoeName + " (velikost " + data.shoeSize + ")",
                 'unit_price': data.price,
-                'vat_rate': '21',
+                'vat_rate': '0',
             }
         ]
     }

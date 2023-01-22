@@ -4,6 +4,7 @@ import SignatureCanvas from "react-signature-canvas";
 import FormElement from "../FormElement";
 import {Close, Refresh} from "react-ionicons";
 import SubmitButton from "../SubmitButton";
+import {useTranslation} from "react-i18next";
 
 export interface FinalProps {
     date: string;
@@ -19,6 +20,8 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
     const [drawnSignature, setDrawnSignature] = useState<string>("");
     const [signatureImg, setSignatureImg] = useState<string | null>(null);
     let sigPad: SignatureCanvas | null = null;
+
+    const {t} = useTranslation();
 
     // When signature image is set or reset, reset drawn signature.
     useEffect(() => {
@@ -40,14 +43,14 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
         let error = false;
 
         if (!drawnSignature && !signatureImg) {
-            setSignatureError("Musíte fakturu podepsat buď elektronicky, nebo pomocí fotky podpisu.");
+            setSignatureError(t("screens.final.error.signature"));
             error = true;
         } else {
             setSignatureError(null);
         }
 
         if (!date) {
-            setDateError("Musíte zadat datum.");
+            setDateError(t("screens.final.error.date"));
             error = true;
         } else {
             setDateError(null);
@@ -74,17 +77,17 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
         />;
     return (
         <div className={"flex flex-col gap-3"}>
-            <FormElement name={"date"} type={"date"} placeholder={""} title={"Datum"}
+            <FormElement name={"date"} type={"date"} placeholder={""} title={t("screens.final.label.date") ?? ""}
                          value={date} error={dateError} onValueChanged={(val) => {setDateError(null); setDate(val)}}/>
 
             <div className={"flex flex-row gap-2 items-end"}>
-                <FormElement name={"signature"} type={"text"} placeholder={""} title={"Podpis"} error={signatureError} customInputElement={signaturePad}/>
+                <FormElement name={"signature"} type={"text"} placeholder={""} title={t("screens.final.label.signature") ?? ""} error={signatureError} customInputElement={signaturePad}/>
                 <Refresh
                     cssClasses={signatureImg ? "" : "cursor-pointer"}
                     width={"2rem"}
                     height={"auto"}
                     color={"#442994"}
-                    title={"Smazat podpis"}
+                    title={t("screens.final.hover.deleteSignature")}
                     onClick={() => {
                         if (signatureImg) return;
                         sigPad?.clear();
@@ -112,13 +115,13 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                             }}
                             className="text-md hidden"
                         />
-                        {signatureImg ? "Změnit nahraný podpis" : "Nebo nahrajte fotku podpisu"}
+                        {signatureImg ? t("screens.final.label.changeUploadedSignature") : t("screens.final.label.uploadSignature")}
                     </label>
                     {signatureImg &&
                         <Close
                             onClick={() => setSignatureImg(null)}
                             cssClasses={"cursor-pointer"}
-                            title={"Smazat nahraný podpis"}
+                            title={t("screens.final.label.removeUploadedSignature")}
                         />
                     }
                 </div>
@@ -129,12 +132,12 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                 // Show the signature image if it's set.
                 signatureImg &&
                 <div>
-                    <img src={signatureImg} height={""} width={"100%"} alt={"Nahraný podpis"} className={"border border-gray-300 rounded"}/>
+                    <img src={signatureImg} height={""} width={"100%"} alt={t("screens.final.hover.uploadedSignature") ?? ""} className={"border border-gray-300 rounded"}/>
                 </div>
             }
 
             <FormNavigationButtons handleClick={handleSubmit} secondElement={
-                <SubmitButton className={"w-full ml-5"} onClick={handleSubmit}>Uložit a stáhnout PDF</SubmitButton>
+                <SubmitButton className={"w-full ml-5"} onClick={handleSubmit}>{t("screens.final.label.submitButton")}</SubmitButton>
             }/>
         </div>
     );
