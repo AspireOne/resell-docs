@@ -1,6 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {Data} from "../../backend/Data";
 import axios from "axios";
+const nodemailer = require('nodemailer');
 
 const base = process.env.FAKTUROID_API_BASE;
 const urls = {
@@ -64,7 +65,17 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         if (!subjectId) return res.status(400).json({ error: 'You must specify subjectId.' });
         const pdfEncoded: string | null | undefined = req.body.data.pdfEncoded;
         return createExpense(data, subjectId, pdfEncoded)
-            .then(expense => res.status(200).json(expense))
+            .then(expense => {
+                try {
+                    if (pdfEncoded) {
+                        sendMail(pdfEncoded, data, process.env.SENDGRID_TO ?? "");
+                        sendMail(pdfEncoded, data, data.email);
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+                return res.status(200).json(expense);
+            })
             .catch(err => {
                 console.log(err);
                 res.status(500).json({error: err});
@@ -74,17 +85,49 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
     return res.status(400).json({ error: 'Undefined action.' });
 }
 
+function sendMail(pdfEncoded: string, data: Data, to: string) {
+    let transporter = nodemailer.createTransport({
+        host: 'smtp.sendgrid.net',
+        port: 587,
+        auth: {
+            user: "apikey",
+            pass: process.env.SENDGRID_API_KEY
+        }
+    })
+
+    transporter.sendMail({
+        from: process.env.SENDGRID_FROM,
+        to: to,
+        subject: "Výkupní faktura",
+        text: `Dobrý den, \n\nV příloze naleznete výkupní fakturu od ${data.nameOrCompany} (${data.shoeName}, velikost ${data.shoeSize}). \n\nResell.cz`,
+        attachments: [
+            {
+                filename: 'faktura.pdf',
+                content: pdfEncoded,
+                encoding: 'base64',
+                contentType: 'application/pdf'
+            }
+        ]
+    }, function(error: any, info: any) {
+        if (error)
+            throw error;
+        else
+            console.log('Email sent: ' + info.response);
+    });
+}
+
 function getSubject(email: string) {
     return axios({url: urls.getSubject(email), method: 'GET', headers: headers, auth: auth })
         .then(res => res.data);
 }
 
 function createExpense(data: Data, subjectId: string | number, pdfEncoded?: string | null) {
+
     const body = {
         'subject_id': subjectId,
-        /*"attachment": pdfEncoded ? "data:application/pdf;" + pdfEncoded : "",*/
+        "attachment": pdfEncoded ? pdfEncoded : "",
         'currency': data.currency,
-        "status": "paid", //TODO
+        "status": "paid",
         "issued_on": data.date,
         "description": "Náklad vytvořený automaticky pomocí resell výkupu.",
         "vat_price_mode": "from_total_with_vat",

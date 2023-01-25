@@ -68,6 +68,7 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             backgroundColor={"white"}
             onEnd={e => {
                 if (signatureImg) return;
+                console.log(sigPad?.toDataURL());
                 setDrawnSignature(sigPad?.toDataURL() ?? "");
             }}
             canvasProps={{

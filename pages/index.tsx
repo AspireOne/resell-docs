@@ -18,21 +18,21 @@ import LanguageDropdown from "../components/LanguageDropdown";
 
 const testData: Data = {
     bankAccount: "",
-    cin:"27604977",
-    city:"Zlín",
-    countryCode:"US",
-    countryName:"USA",
+    cin:"",
+    city:"Zlin",
+    countryCode:"CZ",
+    countryName:"Czech Republic",
     currency:"CZK",
-    date:"2023-01-20",
+    date:"2023-01-25",
     email:"matejpesl1@gmail.com",
     iban:"CZ55 0800 0000 0012 3456 7899",
     nameOrCompany:"Matěj Pešl",
-    postalCode:"763 63",
-    price:"1999",
-    shoeName:"Teniska X-650",
-    shoeSize:"23",
-    street:"Halenkovice 708",
-    signature: ""
+    postalCode:"76363",
+    price:"2000",
+    shoeName:"Teniska X-H50",
+    shoeSize:"24",
+    street:"Halenkovice 706",
+    signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAakAAABaCAYAAAACXalYAAAAAXNSR0IArs4c6QAAA7xJREFUeF7t2bGNg1AURNHvApxQLolNRCU0QYJEY6yWAhyiGxwyIkbnjTQBr+u6ruEhQIAAAQJBgZeRCl5FJAIECBC4BYyUIhAgQIBAVsBIZU8jGAECBAj8HKlt28a6rrfSeZ5jmiZiBAgQIEDgMYGfI/X9fseyLHeYz+cz/t89BAgQIEDgKYGfI7Xv+5jnebzf73Ecx1OZfIcAAQIECNwC/kkpAgECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAr8ASBReQLHEXiIAAAAAElFTkSuQmCC",
 }
 
 export default function Home() {
@@ -124,7 +124,8 @@ const Form = () => {
 
                 let pdfAsBase64: null | string = null;
                 try {
-                    pdfAsBase64 = await pdf.saveAsBase64();
+                    pdfAsBase64 = await pdf.saveAsBase64({dataUri: true});
+                    console.log(pdfAsBase64);
                 } catch (e) {
                     console.log("Could not convert pdf to base64. " + e);
                 }
@@ -158,8 +159,8 @@ const Form = () => {
 }
 
 async function createExpense(data: Data, pdfAsBase64?: string | null): Promise<{[key: string]: string}> {
-    // create axios request to http://localhost:3000/api/fakturoid?action=createSubject.
-    const subjects: any[] = await axios.get(`http://localhost:3000/api/fakturoid?action=getSubject&email=${data.email}`)
+    // create axios request to /api/fakturoid?action=createSubject.
+    const subjects: any[] = await axios.get(`/api/fakturoid?action=getSubject&email=${data.email}`)
         .then((res) => {
             return res.data;
         }).catch((err) => {
@@ -170,7 +171,7 @@ async function createExpense(data: Data, pdfAsBase64?: string | null): Promise<{
     let subject: undefined | {[key:string]: string} = subjects[0];
 
     if (subjects.length === 0) {
-        subject = await axios.post("http://localhost:3000/api/fakturoid?action=createSubject", {
+        subject = await axios.post("/api/fakturoid?action=createSubject", {
             data: {data: data}
         }).then((res) => {
             return res.data;
@@ -186,7 +187,7 @@ async function createExpense(data: Data, pdfAsBase64?: string | null): Promise<{
         console.log("Got existing subject or created one.");
     }
 
-    return await axios.post("http://localhost:3000/api/fakturoid?action=createExpense", {
+    return await axios.post("/api/fakturoid?action=createExpense", {
         data: {data: data, subjectId: subject.id, pdfEncoded: pdfAsBase64}
     }).then((res) => {
         return res.data;

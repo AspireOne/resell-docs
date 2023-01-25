@@ -15,7 +15,7 @@ export default class DocManipulator {
         this.signature = docProps.signature;
         this.items = {
             name: {text: docProps.nameOrCompany, pos: {x: 315, y: 461}},
-            cin: {text: "IČ " + docProps.cin, pos: {x: 315, y: 432}},
+            cin: {text: docProps.cin ? "IČ " + docProps.cin : "N/A", pos: {x: 315, y: 432}},
             address1: {text: `${docProps.street}`, pos: {x: 315, y: 402}},
             address2: {text: `${docProps.postalCode} ${docProps.city}`, pos: {x: 315, y: 387}},
             address3: {text: `${docProps.countryName}`, pos: {x: 315, y: 372}},

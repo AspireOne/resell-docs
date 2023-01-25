@@ -20,11 +20,12 @@ const countries = [
     ["Poland", "PL"],
     ["France", "FR"],
     ["Germany", "DE"],
-    ["USA", "US"],
     ["Italy", "IT"],
     ["Spain", "ES"],
     ["Great Britain", "GB"],
     ["Austria", "AT"],
+    ["Belgium", "BE"],
+    ["Netherlands", "NL"],
 ]
 
 export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoProps, handleSubmit: (props: PersonalInfoProps, forward: boolean) => void}) {
