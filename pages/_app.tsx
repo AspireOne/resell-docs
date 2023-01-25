@@ -14,6 +14,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "main.buttons.continue": "Continue",
         "main.buttons.back": "Back",
 
+        "screens.code.name": "Code",
         "screens.code.code": "Security code",
         "screens.code.submit": "Submit",
         "screens.code.error.code": "Invalid security code.",
@@ -89,6 +90,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "main.buttons.continue": "Pokračovat",
         "main.buttons.back": "Zpět",
 
+        "screens.code.name": "Kód",
         "screens.code.code": "Bezpečnostní kód",
         "screens.code.submit": "Potvrdit",
         "screens.code.error.code": "Neplatný bezpečnostní kód.",
@@ -164,6 +166,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "main.buttons.continue": "Weiter",
         "main.buttons.back": "Zurück",
 
+        "screens.code.name": "Sicherheitscode",
         "screens.code.code": "Sicherheitscode",
         "screens.code.submit": "Bestätigen",
         "screens.code.error.code": "Ungültiger Sicherheitscode.",
@@ -239,6 +242,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "main.buttons.continue": "Kontynuuj",
         "main.buttons.back": "Cofnij",
 
+        "screens.code.name": "Kod",
         "screens.code.code": "Kod bezpieczeństwa",
         "screens.code.submit": "Potwierdź",
         "screens.code.error.code": "Nieprawidłowy kod bezpieczeństwa.",

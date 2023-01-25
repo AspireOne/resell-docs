@@ -40,7 +40,7 @@ async function handlePinSubmit(pin: string, setCode: (code: string) => void, set
     }
     const valid: boolean = await axios.get("/api/pins?action=checkValidity&pin=" + pin)
         .then((res) => {
-            if (!res.data.valid) setPinError("PIN není správný");
+            if (!res.data.valid) setPinError("PIN není správný.");
             return res.data.valid;
         })
         .catch((res) => {

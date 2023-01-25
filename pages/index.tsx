@@ -81,7 +81,7 @@ const Form = () => {
 
     const screens = [
         {
-            title: t("kód"),
+            title: t("screens.code.name"),
             content: <FormCodeScreen handleSubmit={(code) => {
                 setCode(code);
                 handleScreenSubmit(true);
