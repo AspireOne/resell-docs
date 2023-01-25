@@ -34,7 +34,7 @@ export default function FormProductScreen(props: {prevProps?: ProductProps, cin:
     const [shoeName, setShoeName] = useState<string>(props.prevProps?.shoeName ?? "");
     const [shoeSize, setShoeSize] = useState<string>(props.prevProps?.shoeSize ?? "");
     const [price, setPrice] = useState<string>(props.prevProps?.price ?? "");
-    const [currency, setCurrency] = useState<string>(props.prevProps?.currency ?? "");
+    const [currency, setCurrency] = useState<string>(props.prevProps?.currency ?? currencies[0]);
     const [bankAccount, setBankAccount] = useState<string>(props.prevProps?.bankAccount ?? "");
     const [iban, setIban] = useState<string>(props.prevProps?.iban ?? "");
 

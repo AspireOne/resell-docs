@@ -7,7 +7,7 @@ export default function StepBar(props: {steps: string[], currStep: number}) {
                 <div className="flex-1"></div>
 
                 {/*The following piece of code you are about to read gotta be the stupidest shit Iˇve ever typed.*/}
-                <span className={"flex flex-row items-center relative pb-6"}>
+                <span className={"flex flex-row items-center relative pb-6 scale-90 sm:scale-100"}>
                 {
                     props.steps.map((name, i) => {
                         const finished = i < props.currStep;
@@ -20,7 +20,7 @@ export default function StepBar(props: {steps: string[], currStep: number}) {
                                 </div>
                                 {
                                     i+1 < props.steps.length &&
-                                    <div className={`flex-1 px-2 rounded border-b-[5px] w-12 sm:w-14 transition duration-700 ${finished && "border-green-500"}`}></div>
+                                    <div className={`flex-1 px-2 rounded border-b-[5px] w-10 sm:w-14 transition duration-700 ${finished && "border-green-500"}`}></div>
                                 }
                             </span>
                         );

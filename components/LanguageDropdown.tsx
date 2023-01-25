@@ -26,7 +26,7 @@ export default function LanguageDropdown() {
     }
 
     return (
-        <div className={"m-6 -mb-12"}>
+        <div className={"m-3 sm:m-6 -mb-12"}>
             <div className="dropdown dropdown-bottom">
                 <label tabIndex={0} className="btn normal-case">
                     <Language color={"white"}/>

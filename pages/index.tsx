@@ -15,6 +15,7 @@ import axios from "axios";
     import {Language} from "react-ionicons";
     import {PL, US, CZ, DE} from "country-flag-icons/react/3x2";
 import LanguageDropdown from "../components/LanguageDropdown";
+import FormCodeScreen from "../components/form_screens/FormCodeScreen";
 
 const testData: Data = {
     bankAccount: "",
@@ -28,7 +29,7 @@ const testData: Data = {
     iban:"CZ55 0800 0000 0012 3456 7899",
     nameOrCompany:"Matěj Pešl",
     postalCode:"76363",
-    price:"2000",
+    price:"1",
     shoeName:"Teniska X-H50",
     shoeSize:"24",
     street:"Halenkovice 706",
@@ -64,6 +65,7 @@ export default function Home() {
 
 const Form = () => {
     const [currStep, setCurrStep] = useState<number>(0);
+    const [code, setCode] = useState<string>("");
 
     const [personalInfo, setPersonalInfo] = useState<PersonalInfoProps | undefined>(undefined);
     const [productInfo, setProductInfo] = useState<ProductProps | undefined>(undefined);
@@ -78,6 +80,13 @@ const Form = () => {
     const handleScreenSubmit = (forward: boolean) => setCurrStep(currStep + (forward ? 1 : -1));
 
     const screens = [
+        {
+            title: t("kód"),
+            content: <FormCodeScreen handleSubmit={(code) => {
+                setCode(code);
+                handleScreenSubmit(true);
+            }}/>
+        },
         {
             title: t("screens.cin.name"),
             content: <FormCinScreen handleSubmit={(cin) => {
@@ -125,13 +134,12 @@ const Form = () => {
                 let pdfAsBase64: null | string = null;
                 try {
                     pdfAsBase64 = await pdf.saveAsBase64({dataUri: true});
-                    console.log(pdfAsBase64);
                 } catch (e) {
                     console.log("Could not convert pdf to base64. " + e);
                 }
 
                 try {
-                    const expense = await createExpense(data, pdfAsBase64 );
+                    const expense = await createExpense(data,code, pdfAsBase64);
                 } catch (e) {
                     setResultState("warning");
                     setResultMessage(t("screens.result.warningMsg") ?? "");
@@ -154,13 +162,16 @@ const Form = () => {
             <form className={"z-1 relative min-h-[600px] pb-28 p-6 rounded w-full sm:w-[32rem] shadow-md border border-gray-200  mx-auto backdrop-blur-lg bg-white bg-opacity-70"}>
                 {screens[currStep].content}
             </form>
+{/*            <button onClick={async () => {
+                const pdf = await new DocManipulator(testData).createPdf();
+                await createExpense(testData, await pdf.saveAsBase64({dataUri: true}));
+            }}>I LOVE TITTY GIRLS</button>*/}
         </>
     );
 }
 
-async function createExpense(data: Data, pdfAsBase64?: string | null): Promise<{[key: string]: string}> {
-    // create axios request to /api/fakturoid?action=createSubject.
-    const subjects: any[] = await axios.get(`/api/fakturoid?action=getSubject&email=${data.email}`)
+async function createExpense(data: Data, code: string, pdfAsBase64?: string | null): Promise<{[key: string]: string}> {
+    const subjects: any[] = await axios.get(`/api/fakturoid?action=getSubject&email=${data.email}&code=${code}`)
         .then((res) => {
             return res.data;
         }).catch((err) => {
@@ -171,7 +182,7 @@ async function createExpense(data: Data, pdfAsBase64?: string | null): Promise<{
     let subject: undefined | {[key:string]: string} = subjects[0];
 
     if (subjects.length === 0) {
-        subject = await axios.post("/api/fakturoid?action=createSubject", {
+        subject = await axios.post(`/api/fakturoid?action=createSubject&code=${code}`, {
             data: {data: data}
         }).then((res) => {
             return res.data;
@@ -183,11 +194,9 @@ async function createExpense(data: Data, pdfAsBase64?: string | null): Promise<{
 
     if (!subject) {
         throw new Error("Could not get or create subject.");
-    } else {
-        console.log("Got existing subject or created one.");
     }
 
-    return await axios.post("/api/fakturoid?action=createExpense", {
+    return await axios.post(`/api/fakturoid?action=createExpense&code=${code}`, {
         data: {data: data, subjectId: subject.id, pdfEncoded: pdfAsBase64}
     }).then((res) => {
         return res.data;

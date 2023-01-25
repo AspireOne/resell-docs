@@ -14,6 +14,10 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "main.buttons.continue": "Continue",
         "main.buttons.back": "Back",
 
+        "screens.code.code": "Security code",
+        "screens.code.submit": "Submit",
+        "screens.code.error.code": "Invalid security code.",
+
         "screens.cin.name": "CIN",
         "screens.personalInfo.name": "Personal info",
         "screens.product.name": "Product",
@@ -84,6 +88,10 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "main.description": "Vytvoření výkupní faktury",
         "main.buttons.continue": "Pokračovat",
         "main.buttons.back": "Zpět",
+
+        "screens.code.code": "Bezpečnostní kód",
+        "screens.code.submit": "Potvrdit",
+        "screens.code.error.code": "Neplatný bezpečnostní kód.",
 
         "screens.cin.name": "IČO",
         "screens.personalInfo.name": "Osobní údaje",
@@ -156,6 +164,10 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "main.buttons.continue": "Weiter",
         "main.buttons.back": "Zurück",
 
+        "screens.code.code": "Sicherheitscode",
+        "screens.code.submit": "Bestätigen",
+        "screens.code.error.code": "Ungültiger Sicherheitscode.",
+
         "screens.cin.name": "CIN",
         "screens.personalInfo.name": "Persönliche",
         "screens.product.name": "Produkt",
@@ -226,6 +238,10 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "main.description": "Tworzenie faktury zakupu",
         "main.buttons.continue": "Kontynuuj",
         "main.buttons.back": "Cofnij",
+
+        "screens.code.code": "Kod bezpieczeństwa",
+        "screens.code.submit": "Potwierdź",
+        "screens.code.error.code": "Nieprawidłowy kod bezpieczeństwa.",
 
         "screens.cin.name": "CIN",
         "screens.personalInfo.name": "Dane osobowe",

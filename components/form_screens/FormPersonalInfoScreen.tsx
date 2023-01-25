@@ -42,7 +42,7 @@ export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoP
     const [street, setStreet] = useState<string>(props.prevProps?.street ?? "");
     const [city, setCity] = useState<string>(props.prevProps?.city ?? "");
     const [postalCode, setPostalCode] = useState<string>(props.prevProps?.postalCode ?? "");
-    const [countryName, setCountryName] = useState<string>(props.prevProps?.countryName ?? "");
+    const [countryName, setCountryName] = useState<string>(props.prevProps?.countryName ?? countries[0][0]);
 
     const {t} = useTranslation();
 

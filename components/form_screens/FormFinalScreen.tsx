@@ -68,13 +68,12 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             backgroundColor={"white"}
             onEnd={e => {
                 if (signatureImg) return;
-                console.log(sigPad?.toDataURL());
                 setDrawnSignature(sigPad?.toDataURL() ?? "");
             }}
             canvasProps={{
                 width: "425px",
-                height: "90px",
-                className: `border border-gray-300 rounded ${!signatureImg && "cursor-crosshair"}`}}
+                height: "120px",
+                className: `w-full h-[120px] border border-gray-300 rounded ${!signatureImg && "cursor-crosshair"}`}}
         />;
     return (
         <div className={"flex flex-col gap-3"}>

@@ -1,6 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {Data} from "../../backend/Data";
 import axios from "axios";
+import clientPromise from "../../lib/mongodb";
+import CONSTANTS from "../../backend/Constants";
 const nodemailer = require('nodemailer');
 
 const base = process.env.FAKTUROID_API_BASE;
@@ -12,7 +14,7 @@ const urls = {
 }
 
 const headers = {
-    "User-Agent": `ResellczVykupniFaktura (${process.env.FAKTUROID_USERNAME ?? ""})`,
+    "User-Agent": `ResellczVykupniFaktura (${process.env.FAKTUROID_TECHNIC_EMAIL ?? ""})`,
     'Authorization':`Bearer ${process.env.FAKTUROID_API_KEY ?? ""}`,
     "Content-Type": "application/json",
     'Acess-Control-Allow-Origin':'*',
@@ -36,12 +38,26 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
     const action = req.query.action;
     if (!action || action === "") return res.status(400).json({ error: 'You must specify action.' });
 
+    // check code.
+    if (!req.query.code) return res.status(400).json({ error: 'You must specify code.' });
+
+    const db = (await clientPromise).db("resell");
+    const codes = db.collection("codes");
+    const row = await codes.findOne({code: req.query.code});
+
+    if (!row) return res.status(400).json({ error: 'Code is not valid.' });
+
     if (action === "getSubject") {
         const email: string | undefined = req.query.email as string;
         if (!email || email === "") return res.status(400).json({ error: 'You must specify email.' });
         return getSubject(email)
             .then(subject => res.status(200).json(subject))
             .catch(err => {
+                console.log("ATTEMPT TO SHOW ERRORS: ");
+                console.error(err?.response?.data?.errors);
+                console.error(err?.response?.errors);
+                console.error(err?.data?.errors);
+                console.error(err?.errors);
                 console.log(err);
                 res.status(500).json({error: err});
             });
@@ -53,6 +69,11 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         return createSubject(data)
             .then(subject => res.status(200).json(subject))
             .catch(err => {
+                console.log("ATTEMPT TO SHOW ERRORS: ");
+                console.error(err?.response?.data?.errors);
+                console.error(err?.response?.errors);
+                console.error(err?.data?.errors);
+                console.error(err?.errors);
                 console.log(err);
                 res.status(500).json({error: err});
             });
@@ -66,18 +87,24 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         const pdfEncoded: string | null | undefined = req.body.data.pdfEncoded;
         return createExpense(data, subjectId, pdfEncoded)
             .then(expense => {
-                try {
-                    if (pdfEncoded) {
-                        sendMail(pdfEncoded, data, process.env.SENDGRID_TO ?? "");
-                        sendMail(pdfEncoded, data, data.email);
+                if (req.query.code != CONSTANTS.specialErrorCode && req.query.code != CONSTANTS.specialAccessCode) {
+                    try {
+                        // Remove the code from DB.
+                        codes.deleteOne({code: req.query.code});
+                    } catch (e) {
+                        console.log("Could not remove code from database.");
                     }
-                } catch (e) {
-                    console.error(e);
                 }
+
                 return res.status(200).json(expense);
             })
             .catch(err => {
                 console.log(err);
+                console.log("ATTEMPT TO SHOW ERRORS: ");
+                console.error(err?.response?.data?.errors);
+                console.error(err?.response?.errors);
+                console.error(err?.data?.errors);
+                console.error(err?.errors);
                 res.status(500).json({error: err});
             });
     }
