@@ -33,10 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (action === "createCode") {
         // generate random number between 1000 and 9999.
-        let code: string;
-        do {
-            code = Math.floor(1000 + Math.random() * 9000) + "";
-        } while (code === CONSTANTS.specialAccessCode)
+        const code = Math.floor(1000 + Math.random() * 9000) + "";
 
         return codes.insertOne({code: code})
             .then(() => res.status(200).json({ code: code }))

@@ -87,7 +87,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         const pdfEncoded: string | null | undefined = req.body.data.pdfEncoded;
         return createExpense(data, subjectId, pdfEncoded)
             .then(expense => {
-                if (req.query.code != CONSTANTS.specialErrorCode && req.query.code != CONSTANTS.specialAccessCode) {
+                if (req.query.code != CONSTANTS.specialErrorCode) {
                     try {
                         // Remove the code from DB.
                         codes.deleteOne({code: req.query.code});

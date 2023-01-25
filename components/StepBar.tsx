@@ -15,6 +15,7 @@ export default function StepBar(props: {steps: string[], currStep: number}) {
                         return (
                             <span key={i} className={"flex flex-row items-center"}>
                                 <div className={"flex flex-col items-center"}>
+                                    {/* Valerie? */}
                                     <StepCircle step={i+1} state={finished ? "finished" : "unfinished"}/>
                                     <p className={`absolute bottom-0 text-sm ${i == props.currStep && "font-bold"}`}>{name}</p>
                                 </div>
