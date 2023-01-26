@@ -48,7 +48,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.personal.error.zip": "ZIP must be at least 3 characters long.",
         "screens.personal.error.country": "Country must be at least 3 characters long.",
 
-        "screens.product.label.name": "Shoe name",
+        "screens.product.label.name": "Name of sneakers",
         "screens.product.label.size": "Size",
         "screens.product.label.price": "Price",
         "screens.product.label.currency": "Currency",
@@ -85,7 +85,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "head.title": "Resell.cz - výkupní faktura",
         "head.description": "Nástroj pro vytvoření výkupní faktury u resell.cz.",
 
-        "main.title": "Výkup resell.cz",
+        "main.title": "Výkup Resell.cz",
         "main.description": "Vytvoření výkupní faktury",
         "main.buttons.continue": "Pokračovat",
         "main.buttons.back": "Zpět",
@@ -124,7 +124,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.personal.error.zip": "PSČ musí mít alespoň 3 znaky.",
         "screens.personal.error.country": "Země musí mít alespoň 3 znaky.",
 
-        "screens.product.label.name": "Název obuvi",
+        "screens.product.label.name": "Název tenisek",
         "screens.product.label.size": "Velikost",
         "screens.product.label.price": "Cena",
         "screens.product.label.currency": "Měna",
