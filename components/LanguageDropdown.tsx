@@ -29,10 +29,10 @@ export default function LanguageDropdown() {
     return (
         <div className={"m-3 sm:m-6 -mb-12"}>
             <div className="dropdown dropdown-bottom">
-                <label tabIndex={0} className="btn normal-case">
-                    <Language color={"white"} cssClasses={""}/>
-                    <p className={"ml-2 sm:ml-0 hidden sm:block"}>Language</p>
-                </label>
+                <div tabIndex={0} className="btn normal-case flex flex-row gap-2">
+                    <Language color={"white"}/>
+                    <p className={"sm:ml-0 hidden sm:block"}>Language</p>
+                </div>
 
                 <ul tabIndex={0} className="text-black dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32 flex flex-col gap-1">
                     {
