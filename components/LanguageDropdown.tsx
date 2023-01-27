@@ -27,7 +27,10 @@ export default function LanguageDropdown() {
     }
 
     // get current language flag.
-    const CurrentFlag = languages.find((l) => l.lang == i18n.language)?.flag;
+    // find in languages or languagesBeta.
+    // put together languages and languagesBeta.
+
+    const CurrentFlag = [...languages, ...languagesBeta].find((l) => l.lang == i18n.language)?.flag
 
     return (
         <div className={"m-3 sm:m-6 -mb-12"}>
