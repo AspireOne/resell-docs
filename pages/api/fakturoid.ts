@@ -160,9 +160,9 @@ function createExpense(data: Data, subjectId: string | number, pdfEncoded?: stri
         "vat_price_mode": "from_total_with_vat",
         'lines': [
             {
-                'name': data.shoeName,
+                'name': data.shoeName + " (velikost " + data.shoeSize + ")",
                 'quantity': 1,
-                'unit_name': data.shoeName + " (velikost " + data.shoeSize + ")",
+                'unit_name': "",
                 'unit_price': data.price,
                 'vat_rate': '0',
             }

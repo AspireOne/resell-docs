@@ -20,7 +20,7 @@ export default class DocManipulator {
             address2: {text: `${docProps.postalCode} ${docProps.city}`, pos: {x: 315, y: 387}},
             address3: {text: `${docProps.countryName}`, pos: {x: 315, y: 372}},
             email: {text: docProps.email, pos: {x: 315, y: 343}},
-            productName: {text: docProps.shoeName, pos: {x: 75, y: 279}},
+            productName: {text: `${docProps.shoeName} (velikost ${docProps.shoeSize})`, pos: {x: 75, y: 279}},
             productPrice: {text: `${docProps.price} ${docProps.currency}`, pos: {x: 300, y: 279}},
             bankAccount: {text: docProps.bankAccount || docProps.iban!, pos: {x: 158, y: 188}},
             date: {text: docProps.date, pos: {x: 75, y: 115}},

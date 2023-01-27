@@ -26,11 +26,17 @@ export default function LanguageDropdown() {
         );
     }
 
+    // get current language flag.
+    const CurrentFlag = languages.find((l) => l.lang == i18n.language)?.flag;
+
     return (
         <div className={"m-3 sm:m-6 -mb-12"}>
             <div className="dropdown dropdown-bottom">
                 <div tabIndex={0} className="btn normal-case flex flex-row gap-2">
-                    <Language color={"white"}/>
+                    {
+                        CurrentFlag &&
+                        <CurrentFlag className={"w-4"}/>
+                    }
                     <p className={"sm:ml-0 hidden sm:block"}>Language</p>
                 </div>
 
