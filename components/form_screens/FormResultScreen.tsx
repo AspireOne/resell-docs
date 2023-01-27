@@ -5,9 +5,12 @@ import {
     CloseCircle,
     EllipsisHorizontalCircle
 } from "react-ionicons";
+import SubmitButton from "../SubmitButton";
+import {useTranslation} from "react-i18next";
 
-export default function FormResultScreen(props: {state: "loading" | "failed" | "warning" | "success", message: string}) {
-    // TODO: Implement checkmark, loading or failed icon, message etc.
+export default function FormResultScreen(props: {state: "loading" | "failed" | "warning" | "success", message: string, downloadLink: string | null, downloadLoading: boolean}) {
+    // use t function to translate.
+    const {t } = useTranslation();
 
     let icon;
     let animate = true;
@@ -39,7 +42,24 @@ export default function FormResultScreen(props: {state: "loading" | "failed" | "
                     </motion.div>
                 )}
             </div>
-            <div className={"text-md text-gray-800 text-center"}>{props.message}</div>
+            <div className={"text-md text-gray-800 text-center mb-3"}>{props.message}</div>
+            {
+                // Framer animation fade in.
+                props.downloadLink &&
+                <motion.div
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{ ease: "easeOut", duration: 0.4 }}>
+                    <SubmitButton loading={props.downloadLoading} onClick={() => {
+                        const link = document.createElement('a');
+                        link.href = props.downloadLink as string;
+                        link.download = "invoice_" + new Date().toISOString().split('T')[0] + ".pdf";
+                        link.click();
+                    }}>
+                        <a href={props.downloadLink}>{t("screens.result.buttons.download")}</a>
+                    </SubmitButton>
+                </motion.div>
+            }
         </div>
     );
 }

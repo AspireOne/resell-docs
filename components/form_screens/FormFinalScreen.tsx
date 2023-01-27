@@ -22,6 +22,7 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
     let sigPad: SignatureCanvas | null = null;
 
     const {t} = useTranslation();
+    /*const canvas = (sigPad?.getCanvas() as HTMLCanvasElement);*/
 
     // When signature image is set or reset, reset drawn signature.
     useEffect(() => {

@@ -23,13 +23,15 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.personalInfo.name": "Personal info",
         "screens.product.name": "Product",
         "screens.final.name": "Date & signature",
-        "screens.result.name": "Done",
 
+        "screens.result.name": "Done",
         "screens.result.progressMsg": "Creating invoice...",
         "screens.result.failureMsg": "There was an error creating the PDF. Please fill it manually here: {{url}}.",
         "screens.result.savingToServerMsg": "Saving to server...",
         "screens.result.warningMsg": "There was an error saving the invoice to the server, but the PDF was downloaded. Please contact the buyer.",
         "screens.result.successMsg": "Invoice created and recorded successfully.",
+        "screens.result.buttons.download": "Download PDF",
+
 
         "screens.cin.have": "I have a CIN",
         "screens.cin.dontHave": "I don't have a CIN",
@@ -106,6 +108,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.result.savingToServerMsg": "Ukládání na server...",
         "screens.result.warningMsg": "Nastala chyba při ukládání faktury na server, ale PDF bylo úspěšně staženo. Informujte prosím prodejce.",
         "screens.result.successMsg": "Faktura byla úspěšně vytvořena a zaznamenána.",
+        "screens.result.buttons.download": "Stáhnout PDF",
 
         "screens.cin.have": "Mám IČO",
         "screens.cin.dontHave": "Nemám IČO",
@@ -182,6 +185,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.result.savingToServerMsg": "Speichern auf dem Server...",
         "screens.result.warningMsg": "Beim Speichern der Rechnung auf dem Server ist ein Fehler aufgetreten, aber das PDF wurde heruntergeladen. Bitte kontaktieren Sie den Käufer.",
         "screens.result.successMsg": "Rechnung erfolgreich erstellt und aufgezeichnet.",
+        "screens.result.buttons.download": "PDF herunterladen",
 
         "screens.cin.have": "Ich habe eine CIN",
         "screens.cin.dontHave": "Ich habe keine CIN",
@@ -258,6 +262,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.result.savingToServerMsg": "Zapisywanie na serwerze...",
         "screens.result.warningMsg": "Wystąpił błąd podczas zapisywania faktury na serwerze, ale PDF został pobrany. Skontaktuj się z kupującym.",
         "screens.result.successMsg": "Faktura utworzona i zapisana pomyślnie.",
+        "screens.result.buttons.download": "Pobierz PDF",
 
         "screens.cin.have": "Mam CIN",
         "screens.cin.dontHave": "Nie mam CIN",

@@ -1,6 +1,7 @@
 import {useTranslation} from "react-i18next";
-import {Language} from "react-ionicons";
 import {PL, US, CZ, DE} from "country-flag-icons/react/3x2";
+import {Language} from "react-ionicons";
+
 
 const languages = [
     {lang: "en", flag: US, name: "English"},
@@ -29,8 +30,8 @@ export default function LanguageDropdown() {
         <div className={"m-3 sm:m-6 -mb-12"}>
             <div className="dropdown dropdown-bottom">
                 <label tabIndex={0} className="btn normal-case">
-                    <Language color={"white"}/>
-                    <p className={"ml-2 hidden sm:block"}>Language</p>
+                    <Language color={"white"} cssClasses={""}/>
+                    <p className={"ml-2 sm:ml-0 hidden sm:block"}>Language</p>
                 </label>
 
                 <ul tabIndex={0} className="text-black dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32 flex flex-col gap-1">

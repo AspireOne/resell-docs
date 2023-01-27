@@ -2,12 +2,12 @@ import {CheckmarkCircle, CloseCircle} from "react-ionicons";
 
 export default function StepBar(props: {steps: string[], currStep: number}) {
     return (
-        <div className="max-w-xl mx-auto mt-4 pb-2">
-            <div className="flex pb-3">
+        <div className="max-w-xl mx-auto mt-4 pb-2 mx-auto">
+            <div className="flex pb-3 mx-auto">
                 <div className="flex-1"></div>
 
                 {/*The following piece of code you are about to read gotta be the stupidest shit Iˇve ever typed.*/}
-                <span className={"flex flex-row items-center relative pb-6 scale-90 sm:scale-100"}>
+                <span className={"flex flex-row items-center relative pb-6 scale-[.8] sm:scale-100"}>
                 {
                     props.steps.map((name, i) => {
                         const finished = i < props.currStep;

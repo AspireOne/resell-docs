@@ -18,7 +18,6 @@ export default function FormCodeScreen(props: {key?: string, handleSubmit: (code
 
                 <SubmitButton loading={loading} onClick={() => {
                     setLoading(true);
-                    // TODO: Add this to restrictions.
                     if (code.length != 4) {
                         setError(t("screens.code.error.code") ?? "Invalid code.");
                         setLoading(false);

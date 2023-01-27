@@ -74,8 +74,10 @@ const Form = () => {
     
     const [resultState, setResultState] = useState<"loading" | "failed" | "success" | "warning">("loading");
     const [resultMessage, setResultMessage] = useState<string>("");
+    const [resultDownloadLink, setResultDownloadLink] = useState<string | null>(null);
+    const [resultDownloadLoading, setResultDownloadLoading] = useState<boolean>(true);
 
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
 
     const handleScreenSubmit = (forward: boolean) => setCurrStep(currStep + (forward ? 1 : -1));
 
@@ -111,10 +113,11 @@ const Form = () => {
         {
             title: t("screens.final.name"),
             content: <FormFinalScreen prevProps={finalInfo} handleSubmit={async (props, forward) => {
+                handleScreenSubmit(forward);
                 // Note: THIS DOES NOT UPDATE IMMEDIATELY, THATS WHY WE USE PROPS!
                 setFinalInfo(props);
-                handleScreenSubmit(forward);
                 if (!forward) return;
+
                 setResultMessage(t("screens.result.progressMsg") ?? "");
                 const data: Data = {...personalInfo!, ...productInfo!, ...props!};
                 const docManipulator = new DocManipulator(data);
@@ -122,7 +125,7 @@ const Form = () => {
                 let pdf;
                 try {
                     pdf = await docManipulator.createPdf();
-                    await docManipulator.downloadPdf(pdf);
+                    setResultDownloadLink(await docManipulator.getDownloadLink(pdf));
                 } catch (e) {
                     setResultState("failed");
                     setResultMessage(t("screens.result.failedMsg", {url: window.location.host + "/doc.pdf"}) ?? "");
@@ -141,18 +144,20 @@ const Form = () => {
                 try {
                     const expense = await createExpense(data,code, pdfAsBase64);
                 } catch (e) {
+                    setResultDownloadLoading(false);
                     setResultState("warning");
                     setResultMessage(t("screens.result.warningMsg") ?? "");
                     return;
                 }
 
+                setResultDownloadLoading(false);
                 setResultState("success");
                 setResultMessage(t("screens.result.successMsg") ?? "");
             }}/>
         },
         {
             title: t("screens.result.name"),
-            content: <FormResultScreen state={resultState} message={resultMessage}/>
+            content: <FormResultScreen downloadLoading={resultDownloadLoading} state={resultState} message={resultMessage} downloadLink={resultDownloadLink}/>
         }
     ]
 
