@@ -45,13 +45,13 @@ async function handlePinSubmit(pin: string, setCode: (code: string) => void, set
         })
         .catch((res) => {
             console.log(res);
-            setPinError("Serverová chyba při kontrolování PINU.");
+            setPinError(res.response.status === 429 ? "Příliš moc požadavků. Zpomalte prosím." : "Serverová chyba při kontrolování PINU.");
             return false;
         });
 
     if (!valid) return;
 
-    axios.get(`/api/codes?action=createCode`)
+    axios.get(`/api/codes?action=createCode&pin=${pin}`)
         .then((res) => {
             console.log("created code " + res.data.code);
             setCode(res.data.code);
