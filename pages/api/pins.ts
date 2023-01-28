@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     });
 
-    if ((count + 1) >= rateLimit.max) {
+    if ((count + 1) > rateLimit.max) {
         return res.status(429).json({error: "Moc požadavků. Prosím počkejte chvíli."});
     }
 
