@@ -35,7 +35,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const pin: string | undefined = req.query.pin as string;
         if (!pin || pin === "") return res.status(400).json({ error: 'You must specify pin.' });
 
-        const code = Math.floor(1000 + Math.random() * 9000) + "";
+        const allCodes = await codes.find({}).toArray();
+        let code = "";
+        do {
+            code = Math.floor(1000 + Math.random() * 9000) + "";
+        } while (allCodes.find(c => c.code === code));
+
         const pins = db.collection("pins");
         return pins.findOne({pin: pin})
             .then((pin => {

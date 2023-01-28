@@ -13,8 +13,11 @@ export default function PinCreation() {
         <div className={"flex flex-col gap-5 w-fit mx-auto mt-28 items-end"}>
             <h1 className={"text-3xl text-center mx-auto mb-8"}>Generování kódu</h1>
             <FormElement name={"pin"} placeholder={"2049"} title={"Admin PIN"}
-                         value={pin} error={pinError}
-                         onValueChanged={setPin} type={"number"}/>
+                         value={pin} error={pinError} type={"number"}
+                         onValueChanged={(val) => {
+                             setPin(val);
+                             setPinError(null);
+                         }}/>
 
             <SubmitButton loading={loading} onClick={async () => {
                 setLoading(true);
