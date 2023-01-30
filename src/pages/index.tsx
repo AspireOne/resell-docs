@@ -6,14 +6,10 @@ import FormFinalScreen, {FinalProps} from "../components/form_screens/FormFinalS
 import FormPersonalInfoScreen, {PersonalInfoProps} from "../components/form_screens/FormPersonalInfoScreen";
 import FormCinScreen from "../components/form_screens/FormCinScreen";
 import FormResultScreen from "../components/form_screens/FormResultScreen";
-import DocManipulator from "../backend/DocManipulator";
+import DocManipulator from "../lib/DocManipulator";
 import axios from "axios";
-    import {stringify} from "querystring";
-    import {Data} from "../backend/Data";
+import {Data} from "../lib/Data";
     import {useTranslation} from "react-i18next";
-    import {Menu} from "@headlessui/react";
-    import {Language} from "react-ionicons";
-    import {PL, US, CZ, DE} from "country-flag-icons/react/3x2";
 import LanguageDropdown from "../components/LanguageDropdown";
 import FormCodeScreen from "../components/form_screens/FormCodeScreen";
 

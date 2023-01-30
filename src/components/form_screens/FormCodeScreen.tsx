@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import FormElement from "../FormElement";
 import {useTranslation} from "react-i18next";
-import CONSTANTS from "../../backend/Constants";
+import CONSTANTS from "../../lib/Constants";
 
 export default function FormCodeScreen(props: {key?: string, handleSubmit: (code: string) => void}) {
     const [loading, setLoading] = useState(false);

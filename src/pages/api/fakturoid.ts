@@ -1,8 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Data} from "../../backend/Data";
+import {Data} from "../../lib/Data";
 import axios from "axios";
 import clientPromise from "../../lib/mongodb";
-import CONSTANTS from "../../backend/Constants";
+import CONSTANTS from "../../lib/Constants";
 const nodemailer = require('nodemailer');
 
 const base = process.env.FAKTUROID_API_BASE;

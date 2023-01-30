@@ -1,15 +1,10 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import clientPromise from "../../lib/mongodb";
-import CONSTANTS from "../../backend/Constants";
+import CONSTANTS from "../../lib/Constants";
 
 const ExpireAfterDays = 7;
 const expireAfterSeconds = ExpireAfterDays * 24 * 60 * 60;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (!process.env.MONGODB_URI) {
-        console.error("MONGODB URI IS NOT CONFIGURED!");
-        res.status(500).json({error: "MongoDB URI is not configured."});
-    }
-
     const action = req.query.action;
     if (!action || action === "") return res.status(400).json({ error: 'You must specify action.' });
 
