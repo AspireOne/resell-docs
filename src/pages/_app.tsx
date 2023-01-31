@@ -2,12 +2,14 @@ import '../../public/styles/globals.css'
 import type { AppProps } from 'next/app'
 import i18next from "i18next";
 import {I18nextProvider, initReactI18next} from "react-i18next";
+import {trpc} from "../lib/trpc";
 
   export const resources = {
     en: {
       translation: {
         "head.title": "Resell.cz - purchase invoice",
         "head.description": "Tool for creating purchase invoices for resell.cz.",
+        "server.error": "Server error",
 
         "main.title": "Resell.cz invoice",
         "main.description": "Purchase invoice creation",
@@ -25,8 +27,8 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.final.name": "Date & signature",
 
         "screens.result.name": "Done",
-        "screens.result.progressMsg": "Creating invoice...",
-        "screens.result.failureMsg": "There was an error creating the PDF. Please fill it manually here: {{url}}.",
+        "screens.result.creatingPdfMsg": "Creating invoice...",
+        "screens.result.failureMsg": "There was an error creating the PDF. Please fill it manually.",
         "screens.result.savingToServerMsg": "Saving to server...",
         "screens.result.warningMsg": "There was an error saving the invoice to the server, but the PDF was downloaded. Please contact the buyer.",
         "screens.result.successMsg": "Invoice created and recorded successfully.",
@@ -86,6 +88,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
       translation: {
         "head.title": "Resell.cz - výkupní faktura",
         "head.description": "Nástroj pro vytvoření výkupní faktury u resell.cz.",
+        "server.error": "Chyba serveru",
 
         "main.title": "Výkup Resell.cz",
         "main.description": "Vytvoření výkupní faktury",
@@ -103,8 +106,8 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.final.name": "Datum a podpis",
 
         "screens.result.name": "Hotovo",
-        "screens.result.progressMsg": "Vytváření faktury...",
-        "screens.result.failureMsg": "Nastala chyba při vytváření PDF. Vyplňte prosím manuálně tento formulář: {{url}}.",
+        "screens.result.creatingPdfMsg": "Vytváření faktury...",
+        "screens.result.failureMsg": "Nastala chyba při vytváření PDF. Vyplňte prosím formulář manuálně.",
         "screens.result.savingToServerMsg": "Ukládání na server...",
         "screens.result.warningMsg": "Nastala chyba při ukládání faktury na server, ale PDF bylo úspěšně staženo. Informujte prosím prodejce.",
         "screens.result.successMsg": "Faktura byla úspěšně vytvořena a zaznamenána.",
@@ -163,6 +166,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
       translation: {
         "head.title": "Resell.cz - Einkaufsrechnung",
         "head.description": "Tool zum Erstellen von Einkaufsrechnungen für Resell.cz.",
+        "server.error": "Serverfehler",
 
         "main.title": "Resell.cz Rechnung",
         "main.description": "Rechnungserstellung",
@@ -180,8 +184,8 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.final.name": "Unterschrift",
         "screens.result.name": "Fertig",
 
-        "screens.result.progressMsg": "Rechnung erstellen...",
-        "screens.result.failureMsg": "Beim Erstellen des PDF ist ein Fehler aufgetreten. Bitte füllen Sie es hier manuell aus: {{url}}.",
+        "screens.result.creatingPdfMsg": "Rechnung erstellen...",
+        "screens.result.failureMsg": "Beim Erstellen des PDF ist ein Fehler aufgetreten. Bitte füllen Sie es hier manuell.",
         "screens.result.savingToServerMsg": "Speichern auf dem Server...",
         "screens.result.warningMsg": "Beim Speichern der Rechnung auf dem Server ist ein Fehler aufgetreten, aber das PDF wurde heruntergeladen. Bitte kontaktieren Sie den Käufer.",
         "screens.result.successMsg": "Rechnung erfolgreich erstellt und aufgezeichnet.",
@@ -240,6 +244,7 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
       translation: {
         "head.title": "Resell.cz - faktura zakupu",
         "head.description": "Narzędzie do tworzenia faktur zakupu dla resell.cz.",
+        "server.error": "Błąd serwera",
 
         "main.title": "Faktura Resell.cz",
         "main.description": "Tworzenie faktury zakupu",
@@ -257,8 +262,8 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         "screens.final.name": "Data i podpis",
         "screens.result.name": "Gotowe",
 
-        "screens.result.progressMsg": "Tworzenie faktury...",
-        "screens.result.failureMsg": "Wystąpił błąd podczas tworzenia PDF. Proszę wypełnić to ręcznie tutaj: {{url}}.",
+        "screens.result.creatingPdfMsg": "Tworzenie faktury...",
+        "screens.result.failureMsg": "Wystąpił błąd podczas tworzenia PDF. Proszę wypełnić to ręcznie.",
         "screens.result.savingToServerMsg": "Zapisywanie na serwerze...",
         "screens.result.warningMsg": "Wystąpił błąd podczas zapisywania faktury na serwerze, ale PDF został pobrany. Skontaktuj się z kupującym.",
         "screens.result.successMsg": "Faktura utworzona i zapisana pomyślnie.",
@@ -323,10 +328,12 @@ import {I18nextProvider, initReactI18next} from "react-i18next";
         interpolation: { escapeValue: false },  // React already does escaping.
       });
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
       <I18nextProvider i18n={i18next}>
         <Component {...pageProps} />
       </I18nextProvider>
   )
 }
+
+export default trpc.withTRPC(App);

@@ -5,7 +5,7 @@ import {
     CloseCircle,
     EllipsisHorizontalCircle
 } from "react-ionicons";
-import SubmitButton from "../SubmitButton";
+import Button, {DownloadButton} from "../Button";
 import {useTranslation} from "react-i18next";
 
 export default function FormResultScreen(props: {state: "loading" | "failed" | "warning" | "success", message: string, downloadLink: string | null, downloadLoading: boolean}) {
@@ -50,14 +50,13 @@ export default function FormResultScreen(props: {state: "loading" | "failed" | "
                     initial={{opacity: 0}}
                     animate={{opacity: 1}}
                     transition={{ ease: "easeOut", duration: 0.4 }}>
-                    <SubmitButton loading={props.downloadLoading} onClick={() => {
-                        const link = document.createElement('a');
-                        link.href = props.downloadLink as string;
-                        link.download = "invoice_" + new Date().toISOString().split('T')[0] + ".pdf";
-                        link.click();
-                    }}>
-                        <a href={props.downloadLink}>{t("screens.result.buttons.download")}</a>
-                    </SubmitButton>
+                    <DownloadButton
+                        link={props.downloadLink}
+                        name={"invoice_" + new Date().toISOString().split('T')[0] + ".pdf"}
+                        loading={props.downloadLoading}
+                    >
+                        {t("screens.result.buttons.download")}
+                    </DownloadButton>
                 </motion.div>
             }
         </div>

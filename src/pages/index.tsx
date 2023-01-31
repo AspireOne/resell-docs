@@ -6,12 +6,14 @@ import FormFinalScreen, {FinalProps} from "../components/form_screens/FormFinalS
 import FormPersonalInfoScreen, {PersonalInfoProps} from "../components/form_screens/FormPersonalInfoScreen";
 import FormCinScreen from "../components/form_screens/FormCinScreen";
 import FormResultScreen from "../components/form_screens/FormResultScreen";
-import DocManipulator from "../lib/DocManipulator";
+import PdfManipulator from "../lib/PdfManipulator";
 import axios from "axios";
 import {Data} from "../lib/Data";
     import {useTranslation} from "react-i18next";
 import LanguageDropdown from "../components/LanguageDropdown";
 import FormCodeScreen from "../components/form_screens/FormCodeScreen";
+import {trpc} from "../lib/trpc";
+import {PDFDocument} from "pdf-lib";
 
 const testData: Data = {
     bankAccount: "",
@@ -61,7 +63,8 @@ export default function Home() {
 
 const Form = () => {
     const [currStep, setCurrStep] = useState<number>(0);
-    const [code, setCode] = useState<string>("");
+    const [code, setCode] = useState<number | null>(null);
+    const {t} = useTranslation();
 
     const [personalInfo, setPersonalInfo] = useState<PersonalInfoProps | undefined>(undefined);
     const [productInfo, setProductInfo] = useState<ProductProps | undefined>(undefined);
@@ -69,86 +72,83 @@ const Form = () => {
     const [cin, setCin] = useState<boolean>(false);
     
     const [resultState, setResultState] = useState<"loading" | "failed" | "success" | "warning">("loading");
-    const [resultMessage, setResultMessage] = useState<string>("");
-    const [resultDownloadLink, setResultDownloadLink] = useState<string | null>(null);
     const [resultDownloadLoading, setResultDownloadLoading] = useState<boolean>(true);
+    const [resultDownloadLink, setResultDownloadLink] = useState<string | null>(null);
+    const [resultMessage, setProgressMessage] = useState<string>("");
 
-    const {t} = useTranslation();
+    const expenseMutation = trpc.fakturoid.createExpense.useMutation();
 
-    const handleScreenSubmit = (forward: boolean) => setCurrStep(currStep + (forward ? 1 : -1));
+    const changeScreen = (forward: boolean) => setCurrStep(currStep + (forward ? 1 : -1));
 
     const screens = [
         {
             title: t("screens.code.name"),
             content: <FormCodeScreen handleSubmit={(code) => {
                 setCode(code);
-                handleScreenSubmit(true);
+                changeScreen(true);
             }}/>
         },
         {
             title: t("screens.cin.name"),
             content: <FormCinScreen handleSubmit={(cin) => {
                 setCin(cin);
-                handleScreenSubmit(true);
+                changeScreen(true);
             }}/>
         },
         {
             title: t("screens.personalInfo.name"),
             content: <FormPersonalInfoScreen prevProps={personalInfo} handleSubmit={(props, forward) => {
                 setPersonalInfo(props);
-                handleScreenSubmit(forward);
+                changeScreen(forward);
             }}/>
         },
         {
             title: t("screens.product.name"),
             content: <FormProductScreen prevProps={productInfo} cin={cin} handleSubmit={(props, forward) => {
                 setProductInfo(props);
-                handleScreenSubmit(forward);
+                changeScreen(forward);
             }}/>
         },
         {
             title: t("screens.final.name"),
             content: <FormFinalScreen prevProps={finalInfo} handleSubmit={async (props, forward) => {
-                handleScreenSubmit(forward);
-                // Note: THIS DOES NOT UPDATE IMMEDIATELY, THATS WHY WE USE PROPS!
                 setFinalInfo(props);
+                changeScreen(forward);
                 if (!forward) return;
 
-                setResultMessage(t("screens.result.progressMsg") ?? "");
-                const data: Data = {...personalInfo!, ...productInfo!, ...props!};
-                const docManipulator = new DocManipulator(data);
-
-                let pdf;
-                try {
-                    pdf = await docManipulator.createPdf();
-                    setResultDownloadLink(await docManipulator.getDownloadLink(pdf));
-                } catch (e) {
-                    setResultState("failed");
-                    setResultMessage(t("screens.result.failedMsg", {url: window.location.host + "/doc.pdf"}) ?? "");
-                    return;
-                }
-
-                setResultMessage(t("screens.result.savingToServerMsg") ?? "");
-
-                let pdfAsBase64: null | string = null;
-                try {
-                    pdfAsBase64 = await pdf.saveAsBase64({dataUri: true});
-                } catch (e) {
-                    console.log("Could not convert pdf to base64. " + e);
-                }
-
-                try {
-                    const expense = await createExpense(data,code, pdfAsBase64);
-                } catch (e) {
+                function finish(state: "loading" | "failed" | "success" | "warning", message: string) {
                     setResultDownloadLoading(false);
-                    setResultState("warning");
-                    setResultMessage(t("screens.result.warningMsg") ?? "");
+                    setProgressMessage(message);
+                    setResultState(state);
+                }
+
+                setProgressMessage(t("screens.result.creatingPdfMsg") ?? "");
+
+                // PDF.
+                const data: Data = {...personalInfo!, ...productInfo!, ...props!};
+                const pdfManipulator = new PdfManipulator(data);
+                let pdfAsBase64: string;
+                try {
+                    const pdf = await pdfManipulator.createPdf();
+                    pdfAsBase64 = await pdf.saveAsBase64({dataUri: true});
+                    setResultDownloadLink(pdfAsBase64);
+                } catch (e) {
+                    setResultDownloadLink(window.location.host + "/invoice.pdf");
+                    finish("failed", t("screens.result.failureMsg") ?? "");
                     return;
                 }
 
-                setResultDownloadLoading(false);
-                setResultState("success");
-                setResultMessage(t("screens.result.successMsg") ?? "");
+                setProgressMessage(t("screens.result.savingToServerMsg") ?? "");
+
+                // Fakturoid expense.
+                try {
+                    const expense = await expenseMutation.mutateAsync({code: code!, data: data, pdfEncoded: pdfAsBase64});
+                } catch (e: any) {
+                    finish("warning", `${t("screens.result.warningMsg")} (${t("server.error")} "${e.message}")`);
+                    return;
+                }
+
+                finish("success", t("screens.result.successMsg") ?? "");
             }}/>
         },
         {
@@ -169,37 +169,4 @@ const Form = () => {
             }}>I LOVE TITTY GIRLS</button>*/}
         </>
     );
-}
-
-async function createExpense(data: Data, code: string, pdfAsBase64?: string | null): Promise<{[key: string]: string}> {
-    const subjects: any[] = await axios.get(`/api/fakturoid?action=getSubject&email=${data.email}&code=${code}`)
-        .then((res) => {
-            return res.data;
-        }).catch((err) => {
-            console.log(err);
-            return [];
-        });
-
-    let subject: undefined | {[key:string]: string} = subjects[0];
-
-    if (subjects.length === 0) {
-        subject = await axios.post(`/api/fakturoid?action=createSubject&code=${code}`, {
-            data: {data: data}
-        }).then((res) => {
-            return res.data;
-        }).catch((err) => {
-            console.log(err)
-            return undefined;
-        });
-    }
-
-    if (!subject) {
-        throw new Error("Could not get or create subject.");
-    }
-
-    return await axios.post(`/api/fakturoid?action=createExpense&code=${code}`, {
-        data: {data: data, subjectId: subject.id, pdfEncoded: pdfAsBase64}
-    }).then((res) => {
-        return res.data;
-    });
 }

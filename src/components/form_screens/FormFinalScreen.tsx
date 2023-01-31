@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import SignatureCanvas from "react-signature-canvas";
 import FormElement from "../FormElement";
 import {Close, Refresh} from "react-ionicons";
-import SubmitButton from "../SubmitButton";
+import Button from "../Button";
 import {useTranslation} from "react-i18next";
 
 export interface FinalProps {
@@ -138,7 +138,7 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             }
 
             <FormNavigationButtons handleClick={handleSubmit} secondElement={
-                <SubmitButton className={"w-full ml-5"} onClick={handleSubmit}>{t("screens.final.label.submitButton")}</SubmitButton>
+                <Button className={"w-full ml-5"} onClick={handleSubmit}>{t("screens.final.label.submitButton")}</Button>
             }/>
         </div>
     );

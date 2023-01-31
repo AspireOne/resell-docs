@@ -1,66 +1,91 @@
 import FormElement from "../components/FormElement";
-import SubmitButton from "../components/SubmitButton";
+import Button from "../components/Button";
 import axios from "axios";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import {trpc} from "../lib/trpc";
+import {useTranslation} from "react-i18next";
 
 export default function PinCreation() {
-    const [loading, setLoading] = useState(false);
-    const [code, setCode] = useState<string>("");
+    const [code, setCode] = useState<number | null>(null);
     const [pin, setPin] = useState<string>("");
     const [pinError, setPinError] = useState<string | null>(null);
+    const {t} = useTranslation();
+
+    const [allCodes, setAllCodes] = useState<{code: number, createdAt: string}[] | null>(null);
+
+    const codeCreationMutation = trpc.codes.createCode.useMutation({
+        onSuccess: (data) => {
+            setCode(data.code);
+            if (!allCodes)
+                allCodesMutation.mutate({pin: Number(pin)});
+            else
+                setAllCodes([{code: data.code, createdAt: new Date().toISOString()}, ...allCodes]);
+        },
+        onError: (error) => {
+            setPinError(`${t("server.error")} (${error.message})`);
+        }
+    });
+
+    const allCodesMutation = trpc.codes.getAllCodes.useMutation({
+        onSuccess: (data) => {
+            const codesSortedByDate = data.codes.sort((a, b) => {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            });
+            setAllCodes(codesSortedByDate);
+        }
+    });
 
     return (
-        <div className={"flex flex-col gap-5 w-fit mx-auto mt-28 items-end"}>
-            <h1 className={"text-3xl text-center mx-auto mb-8"}>Generování kódu</h1>
-            <FormElement name={"pin"} placeholder={"2049"} title={"Admin PIN"}
-                         value={pin} error={pinError} type={"number"}
-                         onValueChanged={(val) => {
-                             setPin(val);
-                             setPinError(null);
-                         }}/>
+        <>
+            <div className={"max-w-full px-4 sm:px-0 sm:max-w-xs mx-auto mt-28"}>
+                <h1 className={"text-3xl text-center mx-auto mb-8"}>Generování kódu</h1>
+                <FormElement name={"pin"} placeholder={"2049"} title={"Admin PIN"}
+                             value={pin} error={pinError} type={"number"} className={""}
+                             onValueChanged={(val) => {
+                                 setPin(val);
+                                 setPinError(null);
+                             }}/>
 
-            <SubmitButton loading={loading} onClick={async () => {
-                setLoading(true);
-                await handlePinSubmit(pin, setCode, setLoading, setPinError);
-                setLoading(false);
-            }}
-                          className={"w-full"}>
-                Potvrdit
-            </SubmitButton>
+                <Button loading={codeCreationMutation.isLoading} onClick={async () => {
+                    setPinError(null);
+                    if (!pin) {
+                        setPinError("PIN nesmí být prázdný.");
+                        return;
+                    }
+                    codeCreationMutation.mutate({pin: Number(pin)});
+                }} className={"w-full mt-4"}>
+                    Potvrdit
+                </Button>
 
-            {
-                code &&
-                <p className={"text-xl mx-auto text-center mt-4"}>Generovaný kód: <b>{code}</b></p>
-            }
-        </div>
+                {
+                    code &&
+                    <p className={"text-xl mx-auto text-center my-8"}>Generovaný kód: <b>{code}</b></p>
+                }
+
+                {
+                    allCodes &&
+                    <div className={"mx-auto rounded-lg border bg-gray-100 shadow-2xl py-4"}>
+                        <p className={"text-xl text-center mb-2"}>Aktivní kódy:</p>
+                        <div className={"flex flex-row flex-wrap items-center justify-center"}>
+                            {
+                                allCodes.map((code, index) => {
+                                    // format the created at date to MM.DD HH:MM:SS
+                                    const createdAtFormatted = new Date(code.createdAt).toLocaleString("cs-CZ", {
+                                        month: "numeric", day: "2-digit", hour: "2-digit", minute: "2-digit"
+                                    });
+
+                                    return (
+                                        <div key={index} className={"p-4"}>
+                                            <p className={"text-xl text-center"}>{code.code}</p>
+                                            <p className={"text-sm"}>{createdAtFormatted}</p>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </>
     );
-}
-
-async function handlePinSubmit(pin: string, setCode: (code: string) => void, setLoading: (loading: boolean) => void, setPinError: (error: string | null) => void): Promise<void> {
-    if (pin === "") {
-        setPinError("PIN nesmí být prázdný.");
-        return;
-    }
-    const valid: boolean = await axios.get("/api/pins?action=checkValidity&pin=" + pin)
-        .then((res) => {
-            if (!res.data.valid) setPinError("PIN není správný.");
-            return res.data.valid;
-        })
-        .catch((res) => {
-            console.log(res);
-            setPinError(res.response.status === 429 ? "Příliš moc požadavků. Zpomalte prosím." : "Serverová chyba při kontrolování PINU.");
-            return false;
-        });
-
-    if (!valid) return;
-
-    axios.get(`/api/codes?action=createCode&pin=${pin}`)
-        .then((res) => {
-            console.log("created code " + res.data.code);
-            setCode(res.data.code);
-        })
-        .catch((res) => {
-            setPinError("Error při vytváření bezpečnostního kódu.");
-            console.log(res);
-        });
 }

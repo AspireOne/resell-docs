@@ -1,45 +1,44 @@
-import SubmitButton from "../SubmitButton";
-import React, {useState} from "react";
-import axios from "axios";
+import Button from "../Button";
+import React, {useEffect, useState} from "react";
 import FormElement from "../FormElement";
 import {useTranslation} from "react-i18next";
-import CONSTANTS from "../../lib/Constants";
+import {trpc} from "../../lib/trpc";
 
-export default function FormCodeScreen(props: {key?: string, handleSubmit: (code: string) => void}) {
-    const [loading, setLoading] = useState(false);
+export default function FormCodeScreen(props: {key?: string, handleSubmit: (code: number) => void}) {
     const [code, setCode] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const {t, i18n} = useTranslation();
 
+    const codeValidationMutation = trpc.codes.isCodeValid.useMutation({
+        onSuccess: (data) => {
+            if (data.valid)
+                props.handleSubmit(Number(code));
+            else
+                setError(t("screens.code.error.code") ?? "Invalid code.");
+        },
+        onError: (error) => {
+            setError(`${t("server.error")} (${error.message})`);
+        }
+    });
+
     return (
             <div className={"flex flex-col gap-5 w-fit mx-auto mt-52 items-end"}>
                 <FormElement name={"code"} placeholder={"1023"} title={t("screens.code.code") ?? "Security code"}
-                             value={code} error={error} maxLength={4} onValueChanged={setCode} type={"number"} max={9999}/>
+                             value={code} error={error} type={"number"} max={1000000000}
+                             onValueChanged={(val) => {
+                                 setCode(val);
+                                 setError(null);
+                             }}/>
 
-                <SubmitButton loading={loading} onClick={() => {
-                    setLoading(true);
+                <Button loading={codeValidationMutation.isLoading} onClick={async () => {
                     if (code.length != 4) {
                         setError(t("screens.code.error.code") ?? "Invalid code.");
-                        setLoading(false);
-                        console.log("code length is not correct.");
                         return;
                     }
 
-                    axios.get(`/api/codes?action=checkValidity&code=${code}`)
-                        .then((res) => {
-                            console.log(res.data.valid);
-                        if (res.data.valid)
-                            props.handleSubmit(code);
-                        else
-                            setError(t("screens.code.error.code") ?? "Invalid code.");
-                        }).catch((err) => {
-                            console.log("Error validating security code. Letting in with special error code.")
-                            console.log(err);
-                            // Let them in nevertheless with a special error code.
-                            props.handleSubmit(CONSTANTS.specialErrorCode);
-                        }).finally(() => setLoading(false));
+                    codeValidationMutation.mutate({code: Number(code)});
                 }} className={"w-full"}>{t("screens.code.submit") ?? "Submit."}
-                </SubmitButton>
+                </Button>
             </div>
     );
 }
