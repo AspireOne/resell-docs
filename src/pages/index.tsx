@@ -160,7 +160,7 @@ const Form = () => {
     return (
         <>
             <StepBar currStep={currStep} steps={screens.map((screen) => screen.title)}/>
-            <form className={"z-1 relative min-h-[600px] pb-28 p-6 rounded w-full sm:w-[32rem] shadow-md border border-gray-200  mx-auto backdrop-blur-lg bg-white bg-opacity-70"}>
+            <form className={"z-1 relative min-h-[600px] pb-28 p-6 rounded-lg w-full sm:w-[32rem] mx-auto backdrop-blur-lg bg-white bg-opacity-70 sm:shadow-md sm:border sm:border-gray-200"}>
                 {screens[currStep].content}
             </form>
 {/*            <button onClick={async () => {
