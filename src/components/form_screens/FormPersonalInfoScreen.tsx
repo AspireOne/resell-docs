@@ -16,6 +16,7 @@ export interface PersonalInfoProps {
 
 const countries = [
     ["Czech Republic", "CZ"],
+    ["Hungary", "HU"],
     ["Slovakia", "SK"],
     ["Poland", "PL"],
     ["France", "FR"],
