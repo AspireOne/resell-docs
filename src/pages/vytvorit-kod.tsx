@@ -54,7 +54,7 @@ export default function PinCreation() {
                     }
                     codeCreationMutation.mutate({pin: Number(pin)});
                 }} className={"w-full mt-4"}>
-                    Potvrdit
+                    Vygenerovat
                 </Button>
 
                 {
@@ -64,7 +64,7 @@ export default function PinCreation() {
 
                 {
                     allCodes &&
-                    <div className={"mx-auto rounded-lg border bg-gray-100 shadow-2xl py-4"}>
+                    <div className={"mx-auto rounded-lg border bg-gray-100 shadow-xl py-4"}>
                         <p className={"text-xl text-center mb-2"}>Aktivní kódy:</p>
                         <div className={"flex flex-row flex-wrap items-center justify-center"}>
                             {

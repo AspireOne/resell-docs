@@ -98,7 +98,7 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             </div>
 
             <div className={"flex flex-col gap-3"}>
-                <div className={"flex flex-row gap-1"}>
+                {/*<div className={"flex flex-row gap-1"}>
                     <label className="pr-3 pb-1 underline custom-file-upload rounded text-md hover:cursor-pointer">
                         <input
                             type={"file"}
@@ -125,16 +125,16 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                             title={t("screens.final.label.removeUploadedSignature")}
                         />
                     }
-                </div>
+                </div>*/}
 
             </div>
 
             {
                 // Show the signature image if it's set.
-                signatureImg &&
+                /*signatureImg &&
                 <div>
                     <img src={signatureImg} height={""} width={"100%"} alt={t("screens.final.hover.uploadedSignature") ?? ""} className={"border border-gray-300 rounded"}/>
-                </div>
+                </div>*/
             }
 
             <FormNavigationButtons handleClick={handleSubmit} secondElement={
