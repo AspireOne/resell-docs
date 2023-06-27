@@ -9,6 +9,13 @@ export default function FormCodeScreen(props: {key?: string, handleSubmit: (code
     const [error, setError] = useState<string | null>(null);
     const {t, i18n} = useTranslation();
 
+    // if code is in query params, set it.
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) codeValidationMutation.mutate({code: Number(code)});
+    }, []);
+
     const codeValidationMutation = trpc.codes.isCodeValid.useMutation({
         onSuccess: (data) => {
             if (data.valid)

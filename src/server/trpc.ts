@@ -10,8 +10,8 @@ const t = initTRPC.context<Context>().create();
 // Base router and publicProcedure helpers
 
 const rateLimit = {
-    max: 5,
-    perSeconds: 60,
+    max: 7,
+    perSeconds: 30,
 }
 
 const generalMiddleware = t.middleware(async ({ next, ctx }) => {
@@ -48,7 +48,7 @@ async function checkRate(ctx: Context): Promise<void> {
         throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many requests. Please wait for a bit.' });
     }
 
-    ctx.requests.insertOne({ip: ip, date: new Date()});
+    await ctx.requests.insertOne({ip: ip, date: new Date()});
 }
 
 export const router = t.router;

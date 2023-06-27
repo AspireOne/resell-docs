@@ -41,7 +41,6 @@ const DataSchema = z.object({
     bankAccount: z.string(),
     iban: z.string(),
     date: z.string(),
-    signature: z.string()
 })
 
 export const fakturoidRouter = router({
@@ -122,7 +121,7 @@ export const fakturoidRouter = router({
             return {expense};
         })
 })
-async function createExpense(data: Data, subjectId: string | number, pdfEncoded?: string | null): Promise<any> {
+async function createExpense(data: z.infer<typeof DataSchema>, subjectId: string | number, pdfEncoded?: string | null): Promise<any> {
     const body = {
         'subject_id': subjectId,
         "attachment": pdfEncoded ? pdfEncoded : "",
@@ -161,7 +160,7 @@ async function getSubject(email: string): Promise<any> {
     }).then(res => res.data);
 }
 
-async function createSubject(data: Data): Promise<any> {
+async function createSubject(data: z.infer<typeof DataSchema>): Promise<any> {
     const body = {
         "type": "supplier",
         'full_name': data.nameOrCompany,

@@ -30,7 +30,7 @@ import {trpc} from "../lib/trpc";
         "screens.result.creatingPdfMsg": "Creating invoice...",
         "screens.result.failureMsg": "There was an error creating the PDF. Please fill it manually.",
         "screens.result.savingToServerMsg": "Saving to server...",
-        "screens.result.warningMsg": "There was an error saving the invoice to the server, but the PDF was downloaded. Please contact the buyer.",
+        "screens.result.warningMsg": "There was an error saving the invoice to the server. Please contact the buyer.",
         "screens.result.successMsg": "Invoice created and recorded successfully.",
         "screens.result.buttons.download": "Download PDF",
 
@@ -76,6 +76,8 @@ import {trpc} from "../lib/trpc";
         "screens.final.label.changeUploadedSignature": "Change uploaded signature",
         "screens.final.label.removeUploadedSignature": "Remove uploaded signature",
         "screens.final.label.submitButton": "Save & Download PDF",
+        "screens.final.label.uploadInvoice": "Upload invoice by clicking or dragging the pdf here.",
+        "screens.final.label.submitButtonCin": "Save & Send",
 
         "screens.final.hover.deleteSignature": "Delete signature",
         "screens.final.hover.uploadedSignature": "Uploaded signature",
@@ -109,7 +111,7 @@ import {trpc} from "../lib/trpc";
         "screens.result.creatingPdfMsg": "Vytváření faktury...",
         "screens.result.failureMsg": "Nastala chyba při vytváření PDF. Vyplňte prosím formulář manuálně.",
         "screens.result.savingToServerMsg": "Ukládání na server...",
-        "screens.result.warningMsg": "Nastala chyba při ukládání faktury na server, ale PDF bylo úspěšně staženo. Informujte prosím prodejce.",
+        "screens.result.warningMsg": "Nastala chyba při ukládání faktury na server. Informujte prosím prodejce.",
         "screens.result.successMsg": "Faktura byla úspěšně vytvořena a zaznamenána.",
         "screens.result.buttons.download": "Stáhnout PDF",
 
@@ -154,6 +156,8 @@ import {trpc} from "../lib/trpc";
         "screens.final.label.changeUploadedSignature": "Změnit nahraný podpis",
         "screens.final.label.removeUploadedSignature": "Odstranit nahraný podpis",
         "screens.final.label.submitButton": "Uložit a stáhnout PDF",
+        "screens.final.label.uploadInvoice": "Nahrajte fakturu pomocí kliknutí, nebo přetažením sem.",
+        "screens.final.label.submitButtonCin": "Uložit a odeslat",
 
         "screens.final.hover.deleteSignature": "Odstranit podpis",
         "screens.final.hover.uploadedSignature": "Nahraný podpis",
@@ -187,7 +191,7 @@ import {trpc} from "../lib/trpc";
         "screens.result.creatingPdfMsg": "Rechnung erstellen...",
         "screens.result.failureMsg": "Beim Erstellen des PDF ist ein Fehler aufgetreten. Bitte füllen Sie es hier manuell.",
         "screens.result.savingToServerMsg": "Speichern auf dem Server...",
-        "screens.result.warningMsg": "Beim Speichern der Rechnung auf dem Server ist ein Fehler aufgetreten, aber das PDF wurde heruntergeladen. Bitte kontaktieren Sie den Käufer.",
+        "screens.result.warningMsg": "Beim Speichern der Rechnung auf dem Server ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Käufer.",
         "screens.result.successMsg": "Rechnung erfolgreich erstellt und aufgezeichnet.",
         "screens.result.buttons.download": "PDF herunterladen",
 
@@ -232,6 +236,9 @@ import {trpc} from "../lib/trpc";
         "screens.final.label.changeUploadedSignature": "Hochgeladene Unterschrift ändern",
         "screens.final.label.removeUploadedSignature": "Hochgeladene Unterschrift entfernen",
         "screens.final.label.submitButton": "Speichern & PDF herunterladen",
+        "screens.final.label.uploadInvoice": "Laden Sie die Rechnung hier hoch, indem Sie hier klicken oder das PDF hierher ziehen.",
+        "screens.final.label.submitButtonCin": "Speichern und senden",
+
 
         "screens.final.hover.deleteSignature": "Unterschrift löschen",
         "screens.final.hover.uploadedSignature": "Hochgeladene Unterschrift",
@@ -265,7 +272,7 @@ import {trpc} from "../lib/trpc";
         "screens.result.creatingPdfMsg": "Tworzenie faktury...",
         "screens.result.failureMsg": "Wystąpił błąd podczas tworzenia PDF. Proszę wypełnić to ręcznie.",
         "screens.result.savingToServerMsg": "Zapisywanie na serwerze...",
-        "screens.result.warningMsg": "Wystąpił błąd podczas zapisywania faktury na serwerze, ale PDF został pobrany. Skontaktuj się z kupującym.",
+        "screens.result.warningMsg": "Wystąpił błąd podczas zapisywania faktury na serwerze. Skontaktuj się z kupującym.",
         "screens.result.successMsg": "Faktura utworzona i zapisana pomyślnie.",
         "screens.result.buttons.download": "Pobierz PDF",
 
@@ -310,6 +317,8 @@ import {trpc} from "../lib/trpc";
         "screens.final.label.changeUploadedSignature": "Zmień przesłany podpis",
         "screens.final.label.removeUploadedSignature": "Usuń przesłany podpis",
         "screens.final.label.submitButton": "Zapisz i pobierz PDF",
+        "screens.final.label.uploadInvoice": "Prześlij fakturę klikając lub przeciągając plik pdf tutaj.",
+        "screens.final.label.submitButtonCin": "Zapisz i wyślij",
 
         "screens.final.hover.deleteSignature": "Usuń podpis",
         "screens.final.hover.uploadedSignature": "Przesłany podpis",

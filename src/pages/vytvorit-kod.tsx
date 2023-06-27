@@ -10,6 +10,7 @@ export default function PinCreation() {
     const [pin, setPin] = useState<string>("");
     const [pinError, setPinError] = useState<string | null>(null);
     const {t} = useTranslation();
+    const [directLinkCopied, setDirectLinkCopied] = useState<boolean>(false);
 
     const [allCodes, setAllCodes] = useState<{code: number, createdAt: string}[] | null>(null);
 
@@ -59,7 +60,19 @@ export default function PinCreation() {
 
                 {
                     code &&
-                    <p className={"text-xl mx-auto text-center my-8"}>Generovaný kód: <b>{code}</b></p>
+                    <p className={"text-xl mx-auto text-center my-8"}>
+                        Generovaný kód: <b>{code}</b>
+                        <button
+                            className={"mt-2 text-base " + (directLinkCopied ? "text-green-500" : "underline")}
+                            disabled={directLinkCopied}
+                            onClick={() => {
+                                navigator.clipboard.writeText(`${window.location.origin}/?code=${code}`);
+                                setDirectLinkCopied(true);
+                                setTimeout(() => setDirectLinkCopied(false), 1000);
+                        }}>
+                            {directLinkCopied ? "Odkaz zkopírován" : "Zkopírovat přímý odkaz"}
+                        </button>
+                    </p>
                 }
 
                 {

@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import StepBar from "../components/StepBar";
 import FormProductScreen, {ProductProps} from "../components/form_screens/FormProductScreen";
 import FormFinalScreen, {FinalProps} from "../components/form_screens/FormFinalScreen";
@@ -32,6 +32,7 @@ const testData: Data = {
     shoeSize:"24",
     street:"Halenkovice 706",
     signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAakAAABaCAYAAAACXalYAAAAAXNSR0IArs4c6QAAA7xJREFUeF7t2bGNg1AURNHvApxQLolNRCU0QYJEY6yWAhyiGxwyIkbnjTQBr+u6ruEhQIAAAQJBgZeRCl5FJAIECBC4BYyUIhAgQIBAVsBIZU8jGAECBAj8HKlt28a6rrfSeZ5jmiZiBAgQIEDgMYGfI/X9fseyLHeYz+cz/t89BAgQIEDgKYGfI7Xv+5jnebzf73Ecx1OZfIcAAQIECNwC/kkpAgECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAoYqexpBCNAgAABI6UDBAgQIJAVMFLZ0whGgAABAkZKBwgQIEAgK2CksqcRjAABAgSMlA4QIECAQFbASGVPIxgBAgQIGCkdIECAAIGsgJHKnkYwAgQIEDBSOkCAAAECWQEjlT2NYAQIECBgpHSAAAECBLICRip7GsEIECBAwEjpAAECBAhkBYxU9jSCESBAgICR0gECBAgQyAr8ASBReQLHEXiIAAAAAElFTkSuQmCC",
+    customInvoice: undefined
 }
 
 export default function Home() {
@@ -111,7 +112,7 @@ const Form = () => {
         },
         {
             title: t("screens.final.name"),
-            content: <FormFinalScreen prevProps={finalInfo} handleSubmit={async (props, forward) => {
+            content: <FormFinalScreen hasCin={cin} prevProps={finalInfo} handleSubmit={async (props, forward) => {
                 setFinalInfo(props);
                 changeScreen(forward);
                 if (!forward) return;
@@ -126,16 +127,23 @@ const Form = () => {
 
                 // PDF.
                 const data: Data = {...personalInfo!, ...productInfo!, ...props!};
-                const pdfManipulator = new PdfManipulator(data);
                 let pdfAsBase64: string;
-                try {
-                    const pdf = await pdfManipulator.createPdf();
-                    pdfAsBase64 = await pdf.saveAsBase64({dataUri: true});
-                    setResultDownloadLink(pdfAsBase64);
-                } catch (e) {
-                    setResultDownloadLink(window.location.host + "/invoice.pdf");
-                    finish("failed", t("screens.result.failureMsg") ?? "");
-                    return;
+
+                if (!data.customInvoice) {
+                    const pdfManipulator = new PdfManipulator(data);
+                    try {
+                        const pdf = await pdfManipulator.createPdf();
+                        pdfAsBase64 = await pdf.saveAsBase64({dataUri: true});
+                        setResultDownloadLink(pdfAsBase64);
+                    } catch (e) {
+                        setResultDownloadLink(window.location.host + "/invoice.pdf");
+                        finish("failed", t("screens.result.failureMsg") ?? "");
+                        return;
+                    }
+                } else {
+                    setResultDownloadLink(null);
+                    pdfAsBase64 = data.customInvoice;
+                    console.log("uploaded pdf as base64", pdfAsBase64);
                 }
 
                 setProgressMessage(t("screens.result.savingToServerMsg") ?? "");
