@@ -8,6 +8,8 @@ export default class PdfManipulator {
     private readonly signature: string;
 
     constructor(docProps: Data) {
+        if (!docProps.signature) throw new Error("Tried to createpdf without signature provided.");
+
         this.signature = docProps.signature;
         this.items = {
             name: {text: docProps.nameOrCompany, pos: {x: 315, y: 461}},

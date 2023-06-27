@@ -1,17 +1,17 @@
 import {PropsWithChildren} from "react";
 import Spinner from "./Spinner";
 
-export default function Button(props: PropsWithChildren<{className?: string, loading?: boolean, onClick: (e: any) => void}>) {
+export default function Button(props: PropsWithChildren<{className?: string, loading?: boolean, disabled?: boolean, onClick: (e: any) => void}>) {
     return (
         <button
             type={"button"}
-            disabled={props.loading}
-            onClick={props.loading ? undefined : (e) => {
+            disabled={props.loading || props.disabled}
+            onClick={props.loading || props.disabled ? undefined : (e) => {
                 e.preventDefault();
                 if (props.loading) return;
                 props.onClick(e);
             }}
-            className={`hover:shadow-form rounded-md ${props.loading ? "bg-[#5c57d4]" : "bg-[#6A64F1]"} py-3 px-4 text-center text-base font-semibold text-white outline-none transition transition-100 hover:bg-[#605af6] ${props.loading && "cursor-not-allowed"} ${props.className ?? ""}`}
+            className={`hover:shadow-form rounded-md ${props.loading ? "bg-[#5c57d4]" : "bg-[#6A64F1]"} py-3 px-4 text-center text-base font-semibold text-white outline-none transition transition-100 hover:bg-[#605af6] ${props.loading && "cursor-not-allowed"} ${props.disabled && "opacity-50 cursor-not-allowed"} ${props.className ?? ""}`}
         >
             {props.loading && <Spinner/>}
             {props.children}
