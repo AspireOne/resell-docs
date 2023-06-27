@@ -13,7 +13,9 @@ export default function FormCodeScreen(props: {key?: string, handleSubmit: (code
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
-        if (code) codeValidationMutation.mutate({code: Number(code)});
+        // if code is not just a number, return.
+        if (!code || isNaN(Number(code)) || code.length > 8 || code.length < 4) return;
+        codeValidationMutation.mutate({code: Number(code)});
     }, []);
 
     const codeValidationMutation = trpc.codes.isCodeValid.useMutation({
