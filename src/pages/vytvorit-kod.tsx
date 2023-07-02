@@ -4,6 +4,7 @@ import axios from "axios";
 import React, {useEffect, useState} from "react";
 import {trpc} from "../lib/trpc";
 import {useTranslation} from "react-i18next";
+import {useSession} from "next-auth/react";
 
 export default function PinCreation() {
     const [code, setCode] = useState<number | null>(null);
@@ -13,6 +14,8 @@ export default function PinCreation() {
     const [directLinkCopied, setDirectLinkCopied] = useState<boolean>(false);
 
     const [allCodes, setAllCodes] = useState<{code: number, createdAt: string}[] | null>(null);
+
+    const session = useSession();
 
     const codeCreationMutation = trpc.codes.createCode.useMutation({
         onSuccess: (data) => {
