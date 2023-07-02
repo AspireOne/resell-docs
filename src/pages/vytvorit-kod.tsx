@@ -15,7 +15,13 @@ export default function PinCreation() {
 
     const [allCodes, setAllCodes] = useState<{code: number, createdAt: string}[] | null>(null);
 
-    const session = useSession();
+    const {status} = useSession();
+
+    useEffect(() => {
+        if (status === "authenticated") {
+            allCodesMutation.mutate();
+        }
+    }, [status]);
 
     const codeCreationMutation = trpc.codes.createCode.useMutation({
         onSuccess: (data) => {
@@ -56,7 +62,7 @@ export default function PinCreation() {
                         setPinError("PIN nesmí být prázdný.");
                         return;
                     }
-                    codeCreationMutation.mutate({pin: Number(pin)});
+                    codeCreationMutation.mutate();
                 }} className={"w-full mt-4"}>
                     Vygenerovat
                 </Button>

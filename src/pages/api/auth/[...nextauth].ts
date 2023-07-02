@@ -1,7 +1,8 @@
-import NextAuth from "next-auth"
+import NextAuth, {getServerSession, NextAuthOptions} from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
+import {GetServerSidePropsContext} from "next";
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -19,4 +20,13 @@ export default NextAuth({
             return false;
         },
     }
-})
+}
+
+export default NextAuth(authOptions);
+
+export const getServerAuthSession = (ctx: {
+    req: GetServerSidePropsContext["req"];
+    res: GetServerSidePropsContext["res"];
+}) => {
+    return getServerSession(ctx.req, ctx.res, authOptions);
+};

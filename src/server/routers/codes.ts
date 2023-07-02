@@ -1,38 +1,21 @@
 import { z } from 'zod';
-import {generalProcedure, router} from "../trpc";
+import {adminProcedure, generalProcedure, router} from "../trpc";
 import {createCode, isCodeValid, isPinValid} from "../utils";
 import {TRPCError} from "@trpc/server";
 
 export const codesRouter = router({
-    createCode: generalProcedure
-        .input(
-            z.object({
-                pin: z.number().min(1, {message: "Pin is required."})
-            })
-        )
+    createCode: adminProcedure
         .output(
             z.object({
                 code: z.number()
             })
         )
         .mutation(async ({input, ctx}) => {
-            if (!await isPinValid(input.pin, ctx)) {
-                throw new TRPCError({
-                    code: "BAD_REQUEST",
-                    message: "Neplatný PIN."
-                })
-            }
-
             const code = await createCode(ctx);
             return {code};
         }),
 
-    getAllCodes: generalProcedure
-        .input(
-            z.object({
-                pin: z.number().min(1, {message: "Pin is required."})
-            })
-        )
+    getAllCodes: adminProcedure
         .output(
             z.object({
                 codes: z.array(
@@ -44,13 +27,6 @@ export const codesRouter = router({
             })
         )
         .mutation(async ({input, ctx}) => {
-            if (!await isPinValid(input.pin, ctx)) {
-                throw new TRPCError({
-                    code: "BAD_REQUEST",
-                    message: "Neplatný PIN."
-                })
-            }
-
             // get all documents from collection ctx.codes, map their "code" property to an array of numbers.
             const codes = (await ctx.codes.find({}).toArray()).map(c => {
                 return {
@@ -75,6 +51,10 @@ export const codesRouter = router({
         )
         .mutation(async ({input, ctx}) => {
             const valid = await isCodeValid(input.code, ctx);
+            // if valid, set it to cookies.
+            if (valid) {
+                ctx.res.setHeader("Set-Cookie", `code=${input.code}; path=/; expires=Thu, 01 Jan 2035 00:00:00 GMT`);
+            }
             return {valid};
         }),
 });

@@ -23,4 +23,8 @@ export async function createCode(ctx: Context): Promise<number> {
 
 export async function removeCode(code: number, ctx: Context): Promise<void> {
     await ctx.codes.deleteOne({code: code});
+    // remove the code from cookies.
+    if (ctx.req.cookies["code"]) {
+        ctx.res.setHeader("Set-Cookie", `code=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`);
+    }
 }
