@@ -15,6 +15,7 @@ export default function FormCodeScreen(props: {key?: string, handleSubmit: (code
         const code = urlParams.get('code');
         // if code is not just a number, return.
         if (!code || isNaN(Number(code)) || code.length > 8 || code.length < 4) return;
+        setCode(code);
         codeValidationMutation.mutate({code: Number(code)});
     }, []);
 
