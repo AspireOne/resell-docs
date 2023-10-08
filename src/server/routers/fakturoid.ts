@@ -128,7 +128,7 @@ async function createExpense(data: z.infer<typeof DataSchema>, subjectId: string
         'currency': data.currency,
         "status": "paid",
         "issued_on": data.date,
-        "description": "Náklad vytvořený automaticky pomocí resell výkupu.",
+        "description": "Náklad vytvořený automaticky pomocí Resell výkupu.",
         "vat_price_mode": "from_total_with_vat",
         'lines': [
             {
