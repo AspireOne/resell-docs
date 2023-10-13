@@ -6,6 +6,7 @@ import {Refresh, TrashOutline} from "react-ionicons";
 import Button from "../Button";
 import {useTranslation} from "react-i18next";
 import {t} from "i18next";
+import { upload } from '@vercel/blob/client';
 
 interface BaseFinalProps {
     date: string;
@@ -105,16 +106,25 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                 />
             </div>
 
-            <PdfDropzone hidden={!props.hasCin} onChange={(pdf) => {
+            <PdfDropzone hidden={!props.hasCin} onChange={async (pdf) => {
                 // Convert file to base64 string.
                 if (!pdf) {
                     console.log("uploaded pdf:", pdf);
                     setcustomInvoice(null);
                     return;
                 }
+
+                // Check if file is larger than 4.1mb.
+                if (pdf.size > 4.1 * 1024 * 1024) {
+                    const url = await uploadToBlob(pdf);
+                    setcustomInvoice(url);
+                    return;
+                }
+
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = async (e) => {
                     const dataURL = e.target?.result;
+
                     console.log(dataURL);
                     if (typeof dataURL === "string") setcustomInvoice(dataURL);
                     else {
@@ -134,6 +144,21 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
             }/>
         </div>
     );
+}
+
+/**
+ * Uploads the file to the blob storage and returns the url.
+ * @param file
+ */
+async function uploadToBlob(file: File): Promise<string> {
+    const uuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+    const pdfBlob = await upload(uuid, file, {
+        access: 'public',
+        handleUploadUrl: '/api/pdf/upload',
+    });
+
+    return pdfBlob.url;
 }
 
 function PdfDropzone(props: {onChange: (file: File | null) => void, hidden: boolean}) {
