@@ -43,7 +43,7 @@ export default function Home() {
 }
 
 const Form = () => {
-    const [currStep, setCurrStep] = useState<number>(4);
+    const [currStep, setCurrStep] = useState<number>(0);
     const [code, setCode] = useState<number | null>(null);
     const {t} = useTranslation();
 
