@@ -29,7 +29,7 @@ const countries = [
     ["Netherlands", "NL"],
 ]
 
-export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoProps, handleSubmit: (props: PersonalInfoProps, forward: boolean) => void}) {
+export default function FormPersonalInfoScreen(props: {hasCin: boolean, prevProps?: PersonalInfoProps, handleSubmit: (props: PersonalInfoProps, forward: boolean) => void}) {
     // Errors.
     const [nameError, setNameError] = useState<string | null>(null);
     const [emailError, setEmailError] = useState<string | null>(null);
@@ -107,7 +107,7 @@ export default function FormPersonalInfoScreen(props: {prevProps?: PersonalInfoP
 
     return (
         <div className={"flex flex-col gap-3"}>
-            <FormElement name={"name"} type={"name"} placeholder={"Jan Novak"} title={t("screens.personal.label.name") ?? ""}
+            <FormElement name={"name"} type={"name"} placeholder={"Jan Novak"} title={props.hasCin ? t("screens.personal.label.name")! : t("screens.personal.label.nameSurname")!}
                          value={name} error={nameError} onValueChanged={(val) => {setNameError(null); setName(val)}}
             />
 

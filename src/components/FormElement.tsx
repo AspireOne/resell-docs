@@ -29,6 +29,7 @@ export default function FormElement(props: {
     min?: number,
     value?: string | null,
     onValueChanged?: (value: string) => void,
+    readonly?: boolean,
     customInputElement?: ReactNode}) {
     return (
         <div>
@@ -38,6 +39,7 @@ export default function FormElement(props: {
             {
                 props.customInputElement ??
                 <input
+                    readOnly={props.readonly}
                     type={props.type || "text"}
                     name={props.name}
                     max={props.max}

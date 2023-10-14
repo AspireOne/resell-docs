@@ -43,7 +43,7 @@ export default function Home() {
 }
 
 const Form = () => {
-    const [currStep, setCurrStep] = useState<number>(0);
+    const [currStep, setCurrStep] = useState<number>(4);
     const [code, setCode] = useState<number | null>(null);
     const {t} = useTranslation();
 
@@ -78,7 +78,7 @@ const Form = () => {
         },
         {
             title: t("screens.personalInfo.name"),
-            content: <FormPersonalInfoScreen prevProps={personalInfo} handleSubmit={(props, forward) => {
+            content: <FormPersonalInfoScreen hasCin={cin} prevProps={personalInfo} handleSubmit={(props, forward) => {
                 setPersonalInfo(props);
                 changeScreen(forward);
             }}/>

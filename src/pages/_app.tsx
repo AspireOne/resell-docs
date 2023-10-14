@@ -39,6 +39,7 @@ export const resources = {
       "screens.cin.dontHave": "I don't have a CIN",
 
       "screens.personal.label.name": "Name (company or personal)",
+      "screens.personal.label.nameSurname": "First and last name",
       "screens.personal.label.email": "E-mail",
       "screens.personal.label.city": "City",
       "screens.personal.label.street": "Street",
@@ -60,6 +61,9 @@ export const resources = {
       "screens.product.label.bankAccount": "Bank account",
       "screens.product.label.iban": "IBAN",
       "screens.product.label.or": "Or",
+      "screens.product.label.ibanDescription": "Enter your IBAN to pay in EUR (both Revolut and Wise have an IBAN).",
+      "screens.product.label.shoeDescription": "Enter the same name you provided on the invoice (preferably the full name of the shoes as on StockX).",
+      "screens.product.label.shoeDescriptionNoInvoice": "Enter the full name of the sneakers, ideally as on StockX.",
 
       "screens.product.error.name": "Shoe name must be at least 3 characters long.",
       "screens.product.error.size": "Size must be filled.",
@@ -78,6 +82,7 @@ export const resources = {
       "screens.final.label.submitButton": "Save & Download PDF",
       "screens.final.label.uploadInvoice": "Upload invoice by clicking or dragging the pdf here.",
       "screens.final.label.submitButtonCin": "Save & Send",
+      "screens.final.label.notice": "By signing you agree to the following conditions:\n1) The goods must be new, unworn, in 100% condition and in original packaging.\n2) The goods must not contain any manufacturing defects.\n3) The packaging must be original, including all accessories.\n4) The goods must be sent in a protective cardboard box, so that the sneaker box is not damaged.\n5) The goods must be shipped no later than 2 working days, otherwise we are entitled to an immediate refund only if needed.",
 
       "screens.final.hover.deleteSignature": "Delete signature",
       "screens.final.hover.uploadedSignature": "Uploaded signature",
@@ -123,6 +128,7 @@ export const resources = {
       "screens.cin.dontHave": "Nemám IČO",
 
       "screens.personal.label.name": "Název / Jméno a příjmení",
+      "screens.personal.label.nameSurname": "Jméno a příjmení",
       "screens.personal.label.email": "E-mail",
       "screens.personal.label.city": "Město",
       "screens.personal.label.street": "Ulice",
@@ -144,6 +150,9 @@ export const resources = {
       "screens.product.label.bankAccount": "Číslo účtu",
       "screens.product.label.iban": "IBAN",
       "screens.product.label.or": "Nebo",
+      "screens.product.label.ibanDescription": "Zadejte svůj IBAN pro platbu v EUR (Revolut i Wise mají IBAN).",
+      "screens.product.label.shoeDescription": "Zadejte stejný název, který jste uvedli na faktuře (nejlépe celý název tenisek, jako na StockX).",
+      "screens.product.label.shoeDescriptionNoInvoice": "Zadejte celý název tenisek, ideálně jako na StockX.",
 
       "screens.product.error.name": "Název obuvi musí mít alespoň 3 znaky.",
       "screens.product.error.size": "Velikost musí být vyplněna.",
@@ -162,6 +171,7 @@ export const resources = {
       "screens.final.label.submitButton": "Uložit a stáhnout PDF",
       "screens.final.label.uploadInvoice": "Nahrajte fakturu pomocí kliknutí, nebo přetažením sem.",
       "screens.final.label.submitButtonCin": "Uložit a odeslat",
+      "screens.final.label.notice": "S podpisem souhlasíte s následujícími podmínkami:\n1) Zboží musí být nové, nenošené, v 100% stavu a v originálním balení.\n2) Zboží nesmí obsahovat žádné vady z výroby.\n3) Balení musí být původní, a to včetně veškerých doplňků.\n4) Zboží musí být zasláno v ochranné lepenkové krabici, tak aby nedošlo k poškození krabice od tenisek.\n5) Zboží musí být odesláno nejpozději do 2 pracovních dnů, jinak máme nárok pouze v případě naší potřeby na okamžité vrácení peněz.",
 
       "screens.final.hover.deleteSignature": "Odstranit podpis",
       "screens.final.hover.uploadedSignature": "Nahraný podpis",
@@ -205,6 +215,7 @@ export const resources = {
       "screens.cin.dontHave": "Ich habe keine USt-IDNr",
 
       "screens.personal.label.name": "Name (Unternehmen oder Persönlich)",
+      "screens.personal.label.nameSurname": "Vorname und Nachname",
       "screens.personal.label.email": "E-Mail",
       "screens.personal.label.city": "Stadt",
       "screens.personal.label.street": "Straße",
@@ -226,6 +237,9 @@ export const resources = {
       "screens.product.label.bankAccount": "Bankkonto",
       "screens.product.label.iban": "IBAN",
       "screens.product.label.or": "Oder",
+      "screens.product.label.ibanDescription": "Geben Sie Ihre IBAN ein, um in EUR zu zahlen (sowohl Revolut als auch Wise haben eine IBAN).",
+      "screens.product.label.shoeDescription": "Geben Sie den gleichen Namen ein, den Sie auf der Rechnung angegeben haben (ideal den vollständigen Namen der Sneakers wie bei StockX).",
+      "screens.product.label.shoeDescriptionNoInvoice": "Geben Sie den vollständigen Namen der Sneakers ein, idealerweise wie bei StockX.",
 
       "screens.product.error.name": "Schuhname muss mindestens 3 Zeichen lang sein.",
       "screens.product.error.size": "Größe muss ausgefüllt werden.",
@@ -244,6 +258,7 @@ export const resources = {
       "screens.final.label.submitButton": "Speichern & PDF herunterladen",
       "screens.final.label.uploadInvoice": "Laden Sie die Rechnung hier hoch, indem Sie hier klicken oder das PDF hierher ziehen.",
       "screens.final.label.submitButtonCin": "Speichern und senden",
+      "screens.final.label.notice": "Mit der Unterschrift stimmen Sie den folgenden Bedingungen zu:\n1) Die Ware muss neu, ungetragen, zu 100% im Originalzustand und in der Originalverpackung sein.\n2) Die Ware darf keine Produktionsfehler aufweisen.\n3) Die Verpackung muss original sein, einschließlich aller Zubehörteile.\n4) Die Ware muss in einer schützenden Pappbox verschickt werden, sodass der Sneakerkarton nicht beschädigt wird.\n5) Die Ware muss spätestens innerhalb von 2 Werktagen verschickt werden, ansonsten haben wir nur bei Bedarf Anspruch auf eine sofortige Rückerstattung.",
 
 
       "screens.final.hover.deleteSignature": "Unterschrift löschen",
@@ -288,6 +303,8 @@ export const resources = {
       "screens.cin.dontHave": "Nie mam NIP",
 
       "screens.personal.label.name": "Nazwa (firma lub osobista)",
+      "screens.personal.label.nameSurname": "Imię i nazwisko",
+
       "screens.personal.label.email": "E-mail",
       "screens.personal.label.city": "Miasto",
       "screens.personal.label.street": "Ulica",
@@ -309,6 +326,9 @@ export const resources = {
       "screens.product.label.bankAccount": "Konto bankowe",
       "screens.product.label.iban": "IBAN",
       "screens.product.label.or": "Lub",
+      "screens.product.label.ibanDescription": "Wprowadź swój IBAN, aby płacić w EUR (zarówno Revolut, jak i Wise mają IBAN).",
+      "screens.product.label.shoeDescription": "Wpisz tę samą nazwę, którą podałeś na fakturze (najlepiej pełną nazwę butów tak jak na StockX).",
+      "screens.product.label.shoeDescriptionNoInvoice": "Wpisz pełną nazwę butów, najlepiej tak jak na StockX.",
 
       "screens.product.error.name": "Nazwa butów musi mieć co najmniej 3 znaki.",
       "screens.product.error.size": "Rozmiar musi być wypełniony.",
@@ -327,6 +347,7 @@ export const resources = {
       "screens.final.label.submitButton": "Zapisz i pobierz PDF",
       "screens.final.label.uploadInvoice": "Prześlij fakturę klikając lub przeciągając plik pdf tutaj.",
       "screens.final.label.submitButtonCin": "Zapisz i wyślij",
+      "screens.final.label.notice": "Podpisując, zgadzasz się na następujące warunki:\n1) Towar musi być nowy, nienoszony, w 100% stanie i w oryginalnym opakowaniu.\n2) Towar nie może zawierać wad produkcyjnych.\n3) Opakowanie musi być oryginalne, w tym wszystkie akcesoria.\n4) Towar musi być wysłany w ochronnym pudle kartonowym, aby nie uszkodzić pudełka butów.\n5) Towar musi zostać wysłany najpóźniej w ciągu 2 dni roboczych, w przeciwnym razie mamy prawo tylko w razie potrzeby do natychmiastowego zwrotu pieniędzy.",
 
       "screens.final.hover.deleteSignature": "Usuń podpis",
       "screens.final.hover.uploadedSignature": "Przesłany podpis",
