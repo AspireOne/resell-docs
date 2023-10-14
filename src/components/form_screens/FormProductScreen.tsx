@@ -128,7 +128,7 @@ export default function FormProductScreen(props: {
 
       <div className="flex flex-row gap-2 justify-center">
         <div className={"flex flex-row items-center"}>
-          <FormElement name={"price"} className={"rounded-r-none"} type={"number"} step={100} placeholder={"0"}
+          <FormElement name={"price"} className={"flex-grow rounded-r-none flex-1 w-full"} type={"number"} step={100} placeholder={"0"}
                        title={t("screens.product.label.price") ?? ""}
                        value={price} error={priceError} onValueChanged={(val) => {
             setPriceError(null);
@@ -137,7 +137,7 @@ export default function FormProductScreen(props: {
           />
 
           <FormElement readonly={true} name={"currency"} type={"text"} maxLength={3} max={3}
-                       className={"w-16 rounded-l-none border-l-0"}
+                       className={"w-[70px] max-w-[70px] rounded-l-none border-l-0 flex-shrink"}
                        title={"ㅤ"} error={priceError && "ㅤ"} value={currency}/>
         </div>
         <FormElement name={"shoe-size"} type={"number"} placeholder={"42"} title={t("screens.product.label.size") ?? ""}
