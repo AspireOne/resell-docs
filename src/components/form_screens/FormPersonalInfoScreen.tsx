@@ -1,5 +1,5 @@
 import FormElement, {CustomInputFormElement} from "../FormElement";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FormNavigationButtons from "../FormButtons";
 import CustomCombobox from "../CustomCombobox";
 import {useTranslation} from "react-i18next";
@@ -44,13 +44,16 @@ export default function FormPersonalInfoScreen(props: {hasCin: boolean, prevProp
     const [city, setCity] = useState<string>(props.prevProps?.city ?? "");
     const [postalCode, setPostalCode] = useState<string>(props.prevProps?.postalCode ?? "");
     const [countryName, setCountryName] = useState<string>(props.prevProps?.countryName ?? countries[0][0]);
+    const [countryCode, setCountryCode] = useState<string>(props.prevProps?.countryCode ?? countries[0][1]);
+
+    useEffect(() => {
+        const countryCode = countries.find((pair) => pair[0] === countryName)?.[1] ?? "";
+        setCountryCode(countryCode);
+    }, [countryName]);
 
     const {t} = useTranslation();
 
     function handleSubmit(forward: boolean) {
-        // Get countryCode code from countries array by countryCode name.
-        const countryCode = countries.find((pair) => pair[0] === countryName)?.[1] ?? "";
-
         const data: PersonalInfoProps = { nameOrCompany: name, email: email, street: street, city: city,
             countryCode: countryCode, countryName: countryName, postalCode: postalCode };
         if (!forward) props.handleSubmit(data, forward);

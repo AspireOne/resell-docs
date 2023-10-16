@@ -18,6 +18,7 @@ export interface ProductProps {
 export default function FormProductScreen(props: {
   prevProps?: ProductProps,
   cin: boolean,
+  countryCode: string,
   handleSubmit: (props: ProductProps, forward: boolean) => void
 }) {
   const {t, i18n} = useTranslation();
@@ -37,12 +38,13 @@ export default function FormProductScreen(props: {
   const [currency, setCurrency] = useState<string>(props.prevProps?.currency ?? i18n.language === "cs" ? "CZK" : "EUR");
   const [bankAccount, setBankAccount] = useState<string>(props.prevProps?.bankAccount ?? "");
   const [iban, setIban] = useState<string>(props.prevProps?.iban ?? "");
-
-  const isCZ = i18n.language === "cs";
+  const [isCZ, setIsCZ] = useState<boolean>(props.countryCode === "CZ");
 
   useEffect(() => {
-    setCurrency(i18n.language === "cs" ? "CZK" : "EUR");
-  }, [i18n.language]);
+    const isCz = props.countryCode === "CZ"
+    setIsCZ(isCz);
+    setCurrency(isCz ? "CZK" : "EUR");
+  }, [props.countryCode]);
 
   function handleSubmit(forward: boolean) {
     const data = {
@@ -173,8 +175,7 @@ export default function FormProductScreen(props: {
               }
               }/>
               <p className={"mt-2"}>
-                  Vložte pouze tvar bankovního účtu pro platbu v CZK, pokud vložíte IBAN nebo Revolut/Wise, tak
-                  platba nebude odeslána.
+                {t("screens.product.label.bankAccountDescription")}
               </p>
           </>
         }

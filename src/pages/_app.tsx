@@ -64,6 +64,7 @@ export const resources = {
       "screens.product.label.ibanDescription": "Enter your IBAN to pay in EUR (both Revolut and Wise have an IBAN).",
       "screens.product.label.shoeDescription": "Enter the same name you provided on the invoice (preferably the full name of the shoes as on StockX).",
       "screens.product.label.shoeDescriptionNoInvoice": "Enter the full name of the sneakers, ideally as on StockX.",
+      "screens.product.label.bankAccountDescription": "Enter only the bank account form for payment in CZK. If you enter IBAN or Revolut/Wise, the payment will not be sent.",
 
       "screens.product.error.name": "Shoe name must be at least 3 characters long.",
       "screens.product.error.size": "Size must be filled.",
@@ -153,6 +154,7 @@ export const resources = {
       "screens.product.label.ibanDescription": "Zadejte svůj IBAN pro platbu v EUR (Revolut i Wise mají IBAN).",
       "screens.product.label.shoeDescription": "Zadejte stejný název, který jste uvedli na faktuře (nejlépe celý název tenisek, jako na StockX).",
       "screens.product.label.shoeDescriptionNoInvoice": "Zadejte celý název tenisek, ideálně jako na StockX.",
+      "screens.product.label.bankAccountDescription": "Vložte pouze tvar bankovního účtu pro platbu v CZK. Pokud vložíte IBAN nebo Revolut/Wise, tak platba nebude odeslána.",
 
       "screens.product.error.name": "Název obuvi musí mít alespoň 3 znaky.",
       "screens.product.error.size": "Velikost musí být vyplněna.",
@@ -240,6 +242,7 @@ export const resources = {
       "screens.product.label.ibanDescription": "Geben Sie Ihre IBAN ein, um in EUR zu zahlen (sowohl Revolut als auch Wise haben eine IBAN).",
       "screens.product.label.shoeDescription": "Geben Sie den gleichen Namen ein, den Sie auf der Rechnung angegeben haben (ideal den vollständigen Namen der Sneakers wie bei StockX).",
       "screens.product.label.shoeDescriptionNoInvoice": "Geben Sie den vollständigen Namen der Sneakers ein, idealerweise wie bei StockX.",
+      "screens.product.label.bankAccountDescription": "Geben Sie nur das Bankkontoformular für die Zahlung in CZK ein. Wenn Sie IBAN oder Revolut/Wise eingeben, wird die Zahlung nicht gesendet.",
 
       "screens.product.error.name": "Schuhname muss mindestens 3 Zeichen lang sein.",
       "screens.product.error.size": "Größe muss ausgefüllt werden.",
@@ -329,7 +332,7 @@ export const resources = {
       "screens.product.label.ibanDescription": "Wprowadź swój IBAN, aby płacić w EUR (zarówno Revolut, jak i Wise mają IBAN).",
       "screens.product.label.shoeDescription": "Wpisz tę samą nazwę, którą podałeś na fakturze (najlepiej pełną nazwę butów tak jak na StockX).",
       "screens.product.label.shoeDescriptionNoInvoice": "Wpisz pełną nazwę butów, najlepiej tak jak na StockX.",
-
+      "screens.product.label.bankAccountDescription": "Wprowadź tylko formularz konta bankowego do płatności w CZK. Jeśli wprowadzisz IBAN lub Revolut/Wise, płatność nie zostanie wysłana.",
       "screens.product.error.name": "Nazwa butów musi mieć co najmniej 3 znaki.",
       "screens.product.error.size": "Rozmiar musi być wypełniony.",
       "screens.product.error.price": "Cena musi być wypełniona.",
@@ -358,7 +361,7 @@ export const resources = {
       "screens.cin.label.description": "Jeśli masz zarejestrowaną firmę i możesz wystawić nam fakturę, zaznacz \"Mam NIP\". Jeśli sprzedajesz tylko jako osoba prywatna, zaznacz \"Nie mam NIP\""
     }
   }
-} as const;
+}
 
 i18next
   .use(initReactI18next)

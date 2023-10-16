@@ -85,7 +85,7 @@ const Form = () => {
         },
         {
             title: t("screens.product.name"),
-            content: <FormProductScreen prevProps={productInfo} cin={cin} handleSubmit={(props, forward) => {
+            content: <FormProductScreen countryCode={personalInfo?.countryCode ?? "CZ"} prevProps={productInfo} cin={cin} handleSubmit={(props, forward) => {
                 setProductInfo(props);
                 changeScreen(forward);
             }}/>
