@@ -135,6 +135,10 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                 reader.readAsDataURL(pdf);
             }}/>
 
+            <p className={"mt-3 whitespace-pre-line text-sm text-gray-500"}>
+                {t("screens.final.label.notice")}
+            </p>
+
             <FormNavigationButtons handleClick={handleSubmit} secondElement={
                 <Button disabled={props.hasCin && !customInvoice} className={"w-full ml-5"} onClick={handleSubmit}>
                     {props.hasCin

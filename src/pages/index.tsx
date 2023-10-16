@@ -78,14 +78,14 @@ const Form = () => {
         },
         {
             title: t("screens.personalInfo.name"),
-            content: <FormPersonalInfoScreen prevProps={personalInfo} handleSubmit={(props, forward) => {
+            content: <FormPersonalInfoScreen hasCin={cin} prevProps={personalInfo} handleSubmit={(props, forward) => {
                 setPersonalInfo(props);
                 changeScreen(forward);
             }}/>
         },
         {
             title: t("screens.product.name"),
-            content: <FormProductScreen prevProps={productInfo} cin={cin} handleSubmit={(props, forward) => {
+            content: <FormProductScreen countryCode={personalInfo?.countryCode ?? "CZ"} prevProps={productInfo} cin={cin} handleSubmit={(props, forward) => {
                 setProductInfo(props);
                 changeScreen(forward);
             }}/>
