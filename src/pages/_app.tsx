@@ -3,6 +3,8 @@ import type {AppProps} from 'next/app'
 import i18next from "i18next";
 import {I18nextProvider, initReactI18next} from "react-i18next";
 import {trpc} from "../lib/trpc";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const resources = {
   en: {
@@ -90,6 +92,7 @@ export const resources = {
 
       "screens.final.error.date": "Date must be filled.",
       "screens.final.error.signature": "You must sign the invoice either digitally, or with a photo of your signature.",
+      "screens.final.error.pdfTooLarge": "File too large. Please upload a smaller file.",
 
       "screens.cin.label.description": "If you " +
         "have a registered business and can invoice us, tick \"I have a CIN\". If " +
@@ -180,6 +183,7 @@ export const resources = {
 
       "screens.final.error.date": "Datum musí být vyplněno.",
       "screens.final.error.signature": "Musíte podpisat fakturu buď digitálně, nebo nahrát fotku podpisu.",
+        "screens.final.error.pdfTooLarge": "Soubor je příliš velký. Nahrajte prosím menší soubor.",
 
       "screens.cin.label.description": "Pokud máte registrovanou firmu a můžete nám vystavit fakturu, zaškrtněte \"Mám IČO\". Pokud prodáváte jen jako soukromá osoba, zaškrtněte \"Nemám IČO\""
     }
@@ -269,6 +273,7 @@ export const resources = {
 
       "screens.final.error.date": "Datum muss ausgefüllt werden.",
       "screens.final.error.signature": "Sie müssen die Rechnung digital unterschreiben oder mit einem Foto Ihrer Unterschrift.",
+      "screens.final.error.pdfTooLarge": "Datei zu groß. Bitte laden Sie eine kleinere Datei hoch.",
 
       "screens.cin.label.description": "Wenn Sie ein eingetragenes Unternehmen haben und uns eine Rechnung ausstellen können, aktivieren Sie \"Ich habe eine USt-IDNr.\". Wenn Sie nur als Privatperson verkaufen, aktivieren Sie \"Ich habe keine USt-IDNr.\""
     }
@@ -357,6 +362,7 @@ export const resources = {
 
       "screens.final.error.date": "Data musi być wypełniona.",
       "screens.final.error.signature": "Musisz podpisać fakturę cyfrowo lub zdjęciem swojego podpisu.",
+      "screens.final.error.pdfTooLarge": "Plik jest za duży. Prześlij mniejszy plik.",
 
       "screens.cin.label.description": "Jeśli masz zarejestrowaną firmę i możesz wystawić nam fakturę, zaznacz \"Mam NIP\". Jeśli sprzedajesz tylko jako osoba prywatna, zaznacz \"Nie mam NIP\""
     }
@@ -374,6 +380,7 @@ i18next
 function App({Component, pageProps}: AppProps) {
   return (
     <I18nextProvider i18n={i18next}>
+      <ToastContainer position={"top-center"} />
       <Component {...pageProps} />
     </I18nextProvider>
   )

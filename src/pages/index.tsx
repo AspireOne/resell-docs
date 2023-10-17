@@ -43,14 +43,14 @@ export default function Home() {
 }
 
 const Form = () => {
-    const [currStep, setCurrStep] = useState<number>(0);
+    const [currStep, setCurrStep] = useState<number>(4);
     const [code, setCode] = useState<number | null>(null);
     const {t} = useTranslation();
 
     const [personalInfo, setPersonalInfo] = useState<PersonalInfoProps | undefined>(undefined);
     const [productInfo, setProductInfo] = useState<ProductProps | undefined>(undefined);
     const [finalInfo, setFinalInfo] = useState<FinalProps | undefined>(undefined);
-    const [cin, setCin] = useState<boolean>(false);
+    const [cin, setCin] = useState<boolean>(true); // todo: false
     
     const [resultState, setResultState] = useState<"loading" | "failed" | "success" | "warning">("loading");
     const [resultDownloadLoading, setResultDownloadLoading] = useState<boolean>(true);

@@ -1,5 +1,5 @@
 import FormNavigationButtons from "../FormButtons";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import SignatureCanvas from "react-signature-canvas";
 import FormElement from "../FormElement";
 import {Refresh, TrashOutline} from "react-ionicons";
@@ -7,6 +7,7 @@ import Button from "../Button";
 import {useTranslation} from "react-i18next";
 import {t} from "i18next";
 import { upload } from '@vercel/blob/client';
+import {toast} from "react-toastify";
 
 interface BaseFinalProps {
     date: string;
@@ -25,6 +26,8 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
     const [drawnSignature, setDrawnSignature] = useState<string>("");
     const [signatureImg, setSignatureImg] = useState<string | null>(null);
     let sigPad: SignatureCanvas | null = null;
+
+    const pdfZoneRef = useRef<HTMLInputElement>(null);
 
     const {t} = useTranslation();
     /*const canvas = (sigPad?.getCanvas() as HTMLCanvasElement);*/
@@ -106,20 +109,26 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                 />
             </div>
 
-            <PdfDropzone hidden={!props.hasCin} onChange={async (pdf) => {
+            <PdfDropzone hasFile={!!customInvoice} ref={pdfZoneRef} hidden={!props.hasCin} onChange={async (pdf) => {
                 // Convert file to base64 string.
                 if (!pdf) {
-                    console.log("uploaded pdf:", pdf);
+                    if (pdfZoneRef.current) pdfZoneRef.current.value = "";
                     setcustomInvoice(null);
                     return;
                 }
 
-                // Check if file is larger than 4.1mb.
-                if (pdf.size > 4.1 * 1024 * 1024) {
+                /*// if pdf is larger than 7mb.
+                if (pdf.size > 7 * 1024 * 1024) {
+                    setcustomInvoice(null);
+                    toast("The file is too large.", {type: "error"});
+                    return;
+                }
+
+                if (pdf.size > 4.15 * 1024 * 1024) {
                     const url = await uploadToBlob(pdf);
                     setcustomInvoice(url);
                     return;
-                }
+                }*/
 
                 const reader = new FileReader();
                 reader.onload = async (e) => {
@@ -129,6 +138,7 @@ export default function FormFinalScreen(props: {prevProps?: FinalProps, handleSu
                     if (typeof dataURL === "string") setcustomInvoice(dataURL);
                     else {
                         console.error("Error converting pdf to base64 string. Reader returned byte array instead of string.");
+                        if (pdfZoneRef.current) pdfZoneRef.current.value = "";
                         setcustomInvoice(null);
                     }
                 }
@@ -165,7 +175,7 @@ async function uploadToBlob(file: File): Promise<string> {
     return pdfBlob.url;
 }
 
-function PdfDropzone(props: {onChange: (file: File | null) => void, hidden: boolean}) {
+function PdfDropzone(props: {ref: any, hasFile?: boolean, onChange: (file: File | null) => void, hidden: boolean}) {
     const [uploadedPdf, setUploadedPdf] = useState<File | null>(null);
 
     useEffect(() => {
@@ -192,22 +202,31 @@ function PdfDropzone(props: {onChange: (file: File | null) => void, hidden: bool
 
                         </p>
                     </div>
-                    <input id="dropzone-file" type="file" disabled={!!uploadedPdf} className="hidden" accept="application/pdf"
+                    <input ref={props.ref} id="dropzone-file" type="file" disabled={!!uploadedPdf} className="hidden" accept="application/pdf"
                            onChange={(e) => {
                                const file = e.target.files?.[0];
                                if (!file) return;
+
+                               if (file.size > 3.5 * 1024 * 1024) {
+                                   toast(t("screens.final.error.pdfTooLarge") + " (< 3.5mb)", {type: "warning"});
+                                   return;
+                               }
+
                                setUploadedPdf(file);
                            }}
                     />
                 </label>
             </div>
 
-            {uploadedPdf && (
+            {(uploadedPdf && props.hasFile) && (
                 <div className="mt-3 border border-gray-300 hover:bg-gray-100/40 border-1 p-2 rounded-lg flex justify-between flex-row gap-4 items-center w-full">
                     <p className="text-center text-gray-600">
                         {uploadedPdf.name}
                     </p>
-                    <div className={"p-2 rounded-lg border hover:bg-gray-200"} onClick={() => setUploadedPdf(null)}>
+                    <div className={"p-2 rounded-lg border hover:bg-gray-200"} onClick={() => {
+                        setUploadedPdf(null);
+                        props.onChange(null);
+                    }}>
                         <TrashOutline color={"red"}/>
                     </div>
                 </div>

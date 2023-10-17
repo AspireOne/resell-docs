@@ -3,29 +3,21 @@ import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import {NextRequest} from "next/server";
 
 export default async function handler(
-  request: NextRequest,
+  request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  const body = (await request.json()) as HandleUploadBody;
+  const body = request.body as HandleUploadBody;
 
   try {
     const jsonResponse = await handleUpload({
-      body,
+      body: body,
       request,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
       onBeforeGenerateToken: async (
         pathname: string,
         /* clientPayload?: string, */
       ) => {
         // Generate a client token for the browser to upload the file
-
-        // ⚠️ Authenticate users before generating the token.
-        // Otherwise, you're allowing anonymous uploads.
-
-        // const { user } = await auth(request);
-        // const userCanUpload = canUpload(user, pathname);
-        /*if (!userCanUpload) {
-          throw new Error('Not authorized');
-        }*/
 
         return {
           allowedContentTypes: ['application/pdf'],
