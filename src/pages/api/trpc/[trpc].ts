@@ -1,10 +1,11 @@
 import * as trpcNext from '@trpc/server/adapters/next';
 import {appRouter} from '../../../server/routers/_app';
 import {createContext} from "../../../server/context";
+import metaHandler from "../metaHandler";
 
 // export API handler
 // @see https://trpc.io/docs/api-handler
-export default trpcNext.createNextApiHandler({
+const handler = trpcNext.createNextApiHandler({
   router: appRouter,
   createContext: createContext,
   responseMeta() {
@@ -27,3 +28,5 @@ export default trpcNext.createNextApiHandler({
       }
       : undefined,
 });
+
+export default metaHandler.public(handler);
