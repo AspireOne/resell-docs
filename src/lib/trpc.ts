@@ -21,6 +21,12 @@ export const trpc = createTRPCNext<AppRouter>({
             links: [
                 httpBatchLink({
                     url: `https://railway.selltoresell.eu/api/trpc`,
+                    fetch(url, options) {
+                        return fetch(url, {
+                            ...options,
+                            credentials: 'include',
+                        })
+                    }
                 }),
             ],
             /**@link https://tanstack.com/query/v4/docs/reference/QueryClient**/
